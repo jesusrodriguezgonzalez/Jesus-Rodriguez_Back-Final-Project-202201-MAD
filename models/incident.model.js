@@ -33,4 +33,4 @@ userSchema.set('toJSON', {
         delete returnedObject.__v;
     },
 });
-export const User = mongoose.model('User', userSchema);
+export const Incident = mongoose.model('Incident', userSchema);

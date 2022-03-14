@@ -1,7 +1,7 @@
 import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
 import { mongoConnect } from '../services/connection';
-import { createToken, verifyToken } from '../services/auth.js';
+import { createToken } from '../services/auth.js';
 import bcrypt from 'bcryptjs';
 export const getAllUsers = async (req, res, next) => {
     await mongoConnect();
@@ -9,7 +9,7 @@ export const getAllUsers = async (req, res, next) => {
         const resp = await User.find({});
         res.json(resp);
     } catch (err) {
-        throw new Error(err);
+        next(createError(err));
     }
 };
 
@@ -62,9 +62,12 @@ export const login = async (req, resp, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
-    await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        .then((resp) => {
-            res.json(resp);
-        })
-        .catch((err) => next(createError(err)));
+    try {
+        const resp = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
+        res.json(resp);
+    } catch (err) {
+        next(createError(err));
+    }
 };
