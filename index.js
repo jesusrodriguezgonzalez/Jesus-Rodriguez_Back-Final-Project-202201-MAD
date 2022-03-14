@@ -3,12 +3,14 @@ import morgan from 'morgan';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 dotenv.config();
-import { mongoConnect } from './services/db.js';
+import { mongoConnect } from './services/connection.js';
 
 export const app = express();
 const port = process.env.PORT;
 
 import usersRouter from './routes/users.route.js';
+import apartmentsRoute from './routes/users.route.js';
+import incidentsROute from './routes/users.route.js';
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -16,6 +18,8 @@ app.use(cors());
 
 mongoConnect();
 app.use('/users', usersRouter);
+app.use('/apartments', apartmentsRoute);
+app.use('/incidents', incidentsROute);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, resp, next) => {

@@ -55,9 +55,6 @@ describe("Given USERS controllers' ", () => {
     });
 
     describe('Testing registerUser', () => {
-        let req = mockRequest();
-        const res = mockResponse();
-        let next = jest.fn();
         describe('And it works (promise is resolved)', () => {
             beforeEach(() => {
                 req.body = { email: 'Jesus@gmail.com', passwd: '1234' };
