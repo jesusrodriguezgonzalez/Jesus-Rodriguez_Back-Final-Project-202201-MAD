@@ -5,7 +5,6 @@ import {
     updateUser,
 } from '../controllers/users.controllers.js';
 import { User } from '../models/user.models.js';
-import { mockRequest, mockResponse } from '../utils/interceptos';
 import { createToken } from '../services/auth';
 import bcrypt from 'bcryptjs';
 
@@ -55,6 +54,10 @@ describe("Given USERS controllers' ", () => {
     });
 
     describe('Testing registerUser', () => {
+        const userMock = {
+            email: 'Jesus@gmail.com',
+            passwd: '12345',
+        };
         describe('And it works (promise is resolved)', () => {
             beforeEach(() => {
                 req.body = { email: 'Jesus@gmail.com', passwd: '1234' };
@@ -66,15 +69,19 @@ describe("Given USERS controllers' ", () => {
                 });
             });
             test('Then call json', async () => {
-                const userMock = {
-                    email: 'Jesus@gmail.com',
-                    passwd: '12345',
-                };
                 User.create.mockResolvedValue(userMock);
                 await registerUser(req, res, next);
                 await expect(res.json).toHaveBeenCalledWith({
                     email: 'Jesus@gmail.com',
                     passwd: '12345',
+                });
+            });
+
+            describe('And it not works (promise is rejected)', () => {
+                test('Then call next', async () => {
+                    User.create.mockRejectedValue('Test error');
+                    await registerUser(req, res, next);
+                    expect(next).toHaveBeenCalled();
                 });
             });
         });

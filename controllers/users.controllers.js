@@ -20,6 +20,7 @@ export const registerUser = async (req, resp, next) => {
             const userData = { ...req.body, passwd: encryptedPasswd };
             const result = await User.create(userData);
             resp.json(result);
+            resp.status(201);
         } catch (error) {
             next(createError(error));
         }
