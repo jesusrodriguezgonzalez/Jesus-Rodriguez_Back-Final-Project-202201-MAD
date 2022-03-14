@@ -10,3 +10,12 @@ export const getAllApartments = async (req, res, next) => {
         next(createError(err));
     }
 };
+
+export const getApartment = async (req, res, next) => {
+    try {
+        const resp = await Apartment.findById(req.params.id);
+        res.json(resp);
+    } catch (err) {
+        next(createError(err));
+    }
+};
