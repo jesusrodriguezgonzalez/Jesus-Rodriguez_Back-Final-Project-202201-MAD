@@ -1,7 +1,6 @@
 
 .vscode/
 .scannerwork/
-package-lock.json
 
 # Logs
 logs
@@ -44,6 +43,7 @@ bower_components
 build/Release
 
 # Dependency directories
+node_modules
 node_modules/
 jspm_packages/
 
