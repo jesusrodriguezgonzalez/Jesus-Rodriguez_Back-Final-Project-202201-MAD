@@ -7,13 +7,14 @@ import {
 import { User } from '../models/user.models.js';
 import { mockRequest, mockResponse } from '../utils/interceptos';
 import { createToken } from '../services/auth';
+import { createError } from '../services/create-error.js';
 import bcrypt from 'bcryptjs';
 
 jest.mock('../models/user.models.js');
 jest.mock('bcryptjs');
 jest.mock('../services/auth.js');
 
-describe("Given controllers' ", () => {
+describe("Given USERS controllers' ", () => {
     let req;
     let res;
     let next;
@@ -45,13 +46,12 @@ describe("Given controllers' ", () => {
                 },
             ]);
         });
-        test('should return correct mockRejectedValue', async () => {
-            User.find.mockRejectedValue('Test error');
-            try {
-                await getAllUsers();
-            } catch (e) {
-                expect(e).toEqual(new Error('Test error'));
-            }
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                User.find.mockRejectedValue('Test error');
+                await getAllUsers(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
         });
     });
 
@@ -166,13 +166,12 @@ describe("Given controllers' ", () => {
             expect(res.json).toHaveBeenCalled();
         });
 
-        test('should return correct mockRejectedValue', async () => {
-            User.find.mockRejectedValue('Test error');
-            try {
-                await getAllUsers();
-            } catch (e) {
-                expect(e).toEqual(new Error('Test error'));
-            }
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                User.findByIdAndUpdate.mockRejectedValue('Test error');
+                await getAllUsers(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
         });
     });
 });

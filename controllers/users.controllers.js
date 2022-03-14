@@ -3,13 +3,13 @@ import { createError } from '../services/create-error.js';
 import { mongoConnect } from '../services/connection';
 import { createToken } from '../services/auth.js';
 import bcrypt from 'bcryptjs';
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res, next) => {
     await mongoConnect();
     try {
         const resp = await User.find({});
         res.json(resp);
     } catch (err) {
-        throw new Error(err);
+        next(createError(err));
     }
 };
 
@@ -68,6 +68,6 @@ export const updateUser = async (req, res, next) => {
         });
         res.json(resp);
     } catch (err) {
-        throw new Error(err);
+        next(createError(err));
     }
 };

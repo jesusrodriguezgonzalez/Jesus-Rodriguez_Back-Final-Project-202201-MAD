@@ -1,8 +1,13 @@
 import { Incident } from '../models/incident.model.js';
-import { getAllIncidents, getIncidents } from './incidents.controllers';
+import {
+    getAllIncidents,
+    getIncidents,
+    deleteIncident,
+    updateIncident,
+} from './incidents.controllers';
 
 jest.mock('../models/incident.model.js');
-describe('Name of the group', () => {
+describe(' Given INCIDENTS controllers', () => {
     let req;
     let res;
     let next;
@@ -67,6 +72,53 @@ describe('Name of the group', () => {
             } catch (e) {
                 expect(e).toEqual(new Error('Test error'));
             }
+        });
+    });
+
+    describe('Testing deleteIncident()', () => {
+        beforeEach(() => {
+            Incident.findByIdAndDelete.mockResolvedValue([
+                {
+                    'Delete Incident': 12,
+                },
+            ]);
+        });
+
+        test('Then call json', async () => {
+            await deleteIncident(req, res, next);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        // test('should return correct mockRejectedValue', async () => {
+        //     Incident.findById.mockRejectedValue('Test error');
+        //     try {
+        //         await deleteIncident();
+        //     } catch (e) {
+        //         expect(e).toEqual(new Error('Test error'));
+        //     }
+        // });
+    });
+
+    describe('Testing updateIncident()', () => {
+        beforeEach(() => {
+            Incident.findByIdAndUpdate.mockResolvedValue([
+                {
+                    mockIncidents,
+                },
+            ]);
+        });
+
+        test('Then call json', async () => {
+            await updateIncident(req, res, next);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Incident.findByIdAndUpdate.mockRejectedValue('Test error');
+                await updateIncident(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
         });
     });
 });
