@@ -135,7 +135,6 @@ describe("Given USERS controllers' ", () => {
                         User.findOne.mockResolvedValue(userMock);
                         bcrypt.compareSync.mockReturnValue(true);
                         createToken.mockReturnValue('mock_token');
-                        console.log(req.body);
                         await login(req, res, next);
                         await expect(res.json).toHaveBeenCalledWith({
                             token: 'mock_token',
