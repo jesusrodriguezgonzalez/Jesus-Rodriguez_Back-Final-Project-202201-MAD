@@ -2,22 +2,22 @@ import { mongoConnect } from '../services/connection';
 import { Incident } from '../models/incident.model.js';
 import { createError } from '../services/create-error';
 
-export const getAllIncidents = async (req, res) => {
+export const getAllIncidents = async (req, res, next) => {
     await mongoConnect();
     try {
         const resp = await Incident.find({});
         res.json(resp);
     } catch (err) {
-        throw new Error(err);
+        next(createError(err));
     }
 };
 
-export const getIncidents = async (req, res) => {
+export const getIncidents = async (req, res, next) => {
     try {
         const resp = await Incident.findById(req.params.id);
         res.json(resp);
     } catch (err) {
-        throw new Error(err);
+        next(createError(err));
     }
 };
 
@@ -26,7 +26,7 @@ export const deleteIncident = async (req, res, next) => {
         await Incident.findByIdAndDelete(req.params.id);
         res.json({ 'Delete Incidente': req.params.id });
     } catch (err) {
-        throw new Error(err);
+        next(createError(err));
     }
 };
 

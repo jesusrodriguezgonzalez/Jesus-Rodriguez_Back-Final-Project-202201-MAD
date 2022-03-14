@@ -39,13 +39,12 @@ describe(' Given INCIDENTS controllers', () => {
                 },
             ]);
         });
-        test('should return correct mockRejectedValue', async () => {
-            Incident.find.mockRejectedValue('Test error');
-            try {
-                await getAllIncidents();
-            } catch (e) {
-                expect(e).toEqual(new Error('Test error'));
-            }
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Incident.find.mockRejectedValue('Test error');
+                await getAllIncidents(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
         });
     });
 
@@ -65,13 +64,12 @@ describe(' Given INCIDENTS controllers', () => {
             expect(res.json).toHaveBeenCalled();
         });
 
-        test('should return correct mockRejectedValue', async () => {
-            Incident.findById.mockRejectedValue('Test error');
-            try {
-                await getAllIncidents();
-            } catch (e) {
-                expect(e).toEqual(new Error('Test error'));
-            }
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Incident.findById.mockRejectedValue('Test error');
+                await getIncidents(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
         });
     });
 
@@ -89,14 +87,13 @@ describe(' Given INCIDENTS controllers', () => {
             expect(res.json).toHaveBeenCalled();
         });
 
-        // test('should return correct mockRejectedValue', async () => {
-        //     Incident.findById.mockRejectedValue('Test error');
-        //     try {
-        //         await deleteIncident();
-        //     } catch (e) {
-        //         expect(e).toEqual(new Error('Test error'));
-        //     }
-        // });
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Incident.findByIdAndDelete.mockRejectedValue('Test error');
+                await deleteIncident(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
     });
 
     describe('Testing updateIncident()', () => {

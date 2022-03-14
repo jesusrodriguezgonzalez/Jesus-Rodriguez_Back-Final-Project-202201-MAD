@@ -7,7 +7,6 @@ import {
 import { User } from '../models/user.models.js';
 import { mockRequest, mockResponse } from '../utils/interceptos';
 import { createToken } from '../services/auth';
-import { createError } from '../services/create-error.js';
 import bcrypt from 'bcryptjs';
 
 jest.mock('../models/user.models.js');
