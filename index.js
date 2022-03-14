@@ -9,8 +9,8 @@ export const app = express();
 const port = process.env.PORT;
 
 import usersRouter from './routes/users.route.js';
-import apartmentsRoute from './routes/users.route.js';
-import incidentsROute from './routes/users.route.js';
+import apartmentsRoute from './routes/aprtments.route.js';
+import incidentsROute from './routes/incidents.route.js';
 
 app.use(express.json());
 app.use(morgan('dev'));

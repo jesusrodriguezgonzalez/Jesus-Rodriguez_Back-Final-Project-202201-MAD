@@ -1,6 +1,6 @@
-import { mongoConnect } from '../services/connection';
+import { mongoConnect } from '../services/connection.js';
 import { Incident } from '../models/incident.model.js';
-import { createError } from '../services/create-error';
+import { createError } from '../services/create-error.js';
 
 export const getAllIncidents = async (req, res, next) => {
     await mongoConnect();
@@ -44,6 +44,7 @@ export const updateIncident = async (req, res, next) => {
 export const newIncident = async (req, res, next) => {
     try {
         const result = await Incident.create(req.body);
+        res.status(201);
         res.json(result);
     } catch (error) {
         next(createError(error));

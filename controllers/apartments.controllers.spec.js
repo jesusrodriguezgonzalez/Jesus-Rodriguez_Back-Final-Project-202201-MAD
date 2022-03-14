@@ -28,7 +28,6 @@ describe(' Given APARTMENTS controllers', () => {
     describe('Testing  getApartment ', () => {
         test('should return correct mockResolvedValue', async () => {
             Apartment.find.mockResolvedValue([mockApartment]);
-
             await getAllApartments(req, res);
 
             expect(res.json).toHaveBeenCalledTimes(1);
