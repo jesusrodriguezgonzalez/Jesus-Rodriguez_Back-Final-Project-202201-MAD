@@ -28,3 +28,27 @@ export const deleteApartment = async (req, res, next) => {
         next(createError(err));
     }
 };
+
+export const updateApartment = async (req, res, next) => {
+    try {
+        const resp = await Apartment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+            }
+        );
+        res.json(resp);
+    } catch (err) {
+        next(createError(err));
+    }
+};
+
+export const newApartment = async (req, res, next) => {
+    try {
+        const result = await Apartment.create(req.body);
+        res.json(result);
+    } catch (error) {
+        next(createError(error));
+    }
+};

@@ -3,6 +3,8 @@ import {
     getAllApartments,
     getApartment,
     deleteApartment,
+    updateApartment,
+    newApartment,
 } from './apartments.controllers.js';
 
 jest.mock('../models/apartment.models.js');
@@ -89,6 +91,53 @@ describe(' Given APARTMENTS controllers', () => {
             test('Then call next', async () => {
                 Apartment.findByIdAndDelete.mockRejectedValue('Test error');
                 await deleteApartment(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Testing updateApartment()', () => {
+        beforeEach(() => {
+            Apartment.findByIdAndUpdate.mockResolvedValue([
+                {
+                    mockApartment,
+                },
+            ]);
+        });
+
+        test('Then call json', async () => {
+            await updateApartment(req, res, next);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Apartment.findByIdAndUpdate.mockRejectedValue('Test error');
+                await updateApartment(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Testing  newIncident ', () => {
+        test('should return correct mockResolvedValue', async () => {
+            Apartment.create.mockResolvedValue([mockApartment]);
+
+            await newApartment(req, res);
+
+            expect(res.json).toHaveBeenCalledTimes(1);
+            expect(res.json).toHaveBeenCalledWith([
+                {
+                    direction: 'New Direction',
+                    cp: '28010',
+                    province: 'Madrid',
+                },
+            ]);
+        });
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Apartment.create.mockRejectedValue('Test error');
+                await newApartment(req, res, next);
                 expect(next).toHaveBeenCalled();
             });
         });
