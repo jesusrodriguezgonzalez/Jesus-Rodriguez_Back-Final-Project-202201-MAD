@@ -40,3 +40,12 @@ export const updateIncident = async (req, res, next) => {
         next(createError(err));
     }
 };
+
+export const newIncident = async (req, res, next) => {
+    try {
+        const result = await Incident.create(req.body);
+        res.json(result);
+    } catch (error) {
+        next(createError(error));
+    }
+};

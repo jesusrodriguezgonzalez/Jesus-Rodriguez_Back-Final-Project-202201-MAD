@@ -4,6 +4,7 @@ import {
     getIncidents,
     deleteIncident,
     updateIncident,
+    newIncident,
 } from './incidents.controllers';
 
 jest.mock('../models/incident.model.js');
@@ -114,6 +115,36 @@ describe(' Given INCIDENTS controllers', () => {
             test('Then call next', async () => {
                 Incident.findByIdAndUpdate.mockRejectedValue('Test error');
                 await updateIncident(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Testing  newIncident ', () => {
+        test('should return correct mockResolvedValue', async () => {
+            Incident.create.mockResolvedValue([
+                {
+                    name: 'jesus rodriguez',
+                    age: '22',
+                    email: 'jesus@gmail.com',
+                },
+            ]);
+
+            await newIncident(req, res);
+
+            expect(res.json).toHaveBeenCalledTimes(1);
+            expect(res.json).toHaveBeenCalledWith([
+                {
+                    name: 'jesus rodriguez',
+                    age: '22',
+                    email: 'jesus@gmail.com',
+                },
+            ]);
+        });
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Incident.create.mockRejectedValue('Test error');
+                await newIncident(req, res, next);
                 expect(next).toHaveBeenCalled();
             });
         });
