@@ -21,7 +21,12 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
     },
-    status: { type: String, required: true },
+    status: {
+        type: String,
+        required: true,
+        enum: ['Leased', 'Available'],
+        default: 'Available',
+    },
     photos: [],
     incidents: {
         type: [

@@ -19,8 +19,12 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
-    status: { type: String },
-    priority: { type: String },
+    status: { type: String, enum: ['Open', 'Closed'], default: 'Open' },
+    priority: {
+        type: String,
+        enum: ['High', 'Medium', 'Low'],
+        default: 'Medium',
+    },
     date_created: { type: Date },
     date_closed: { type: Date },
 });
