@@ -6,7 +6,7 @@ import {
 } from '../controllers/users.controllers.js';
 import { User } from '../models/user.models.js';
 import { mockRequest, mockResponse } from '../utils/interceptos';
-import { createToken, verifyToken } from '../services/auth';
+import { createToken } from '../services/auth';
 import bcrypt from 'bcryptjs';
 
 jest.mock('../models/user.models.js');
@@ -33,9 +33,6 @@ describe("Given controllers' ", () => {
                     surname: 'rodriguez',
                 },
             ]);
-
-            let req = mockRequest();
-            const res = mockResponse();
 
             await getAllUsers(req, res);
 
@@ -64,23 +61,23 @@ describe("Given controllers' ", () => {
         let next = jest.fn();
         describe('And it works (promise is resolved)', () => {
             beforeEach(() => {
-                req.body = { name: 'Jesus', passwd: '1234' };
+                req.body = { email: 'Jesus@gmail.com', passwd: '1234' };
                 bcrypt.hashSync.mockResolvedValue('encrypted1234');
                 User.mockReturnValue({
-                    name: 'Jesus',
+                    email: 'Jesus@gmail.com',
                     passwd: 'encrypted1234',
                     id: 1,
                 });
             });
             test('Then call json', async () => {
                 const userMock = {
-                    name: 'Jesus',
+                    email: 'Jesus@gmail.com',
                     passwd: '12345',
                 };
                 User.create.mockResolvedValue(userMock);
                 await registerUser(req, res, next);
                 await expect(res.json).toHaveBeenCalledWith({
-                    name: 'Jesus',
+                    email: 'Jesus@gmail.com',
                     passwd: '12345',
                 });
             });
@@ -90,7 +87,7 @@ describe("Given controllers' ", () => {
         describe('When loginUser is triggered', () => {
             describe('And there are not user name ', () => {
                 test('Then call next', async () => {
-                    req.body = { name: 'Jesus' };
+                    req.body = { email: 'jesus@gmail.com' };
                     await login(req, res, next);
                     expect(res.json).not.toHaveBeenCalled();
                     expect(next).toHaveBeenCalled();
@@ -154,17 +151,28 @@ describe("Given controllers' ", () => {
     });
 
     describe('Testing updateUser()', () => {
-        User.findByIdAndUpdate.mockResolvedValue([
-            {
-                name: 'jesus',
-                age: 28,
-                surname: 'rodriguez',
-            },
-        ]);
+        beforeEach(() => {
+            User.findByIdAndUpdate.mockResolvedValue([
+                {
+                    name: 'jesus',
+                    age: 28,
+                    surname: 'rodriguez',
+                },
+            ]);
+        });
 
         test('Then call json', async () => {
             await updateUser(req, res, next);
             expect(res.json).toHaveBeenCalled();
+        });
+
+        test('should return correct mockRejectedValue', async () => {
+            User.find.mockRejectedValue('Test error');
+            try {
+                await getAllUsers();
+            } catch (e) {
+                expect(e).toEqual(new Error('Test error'));
+            }
         });
     });
 });
