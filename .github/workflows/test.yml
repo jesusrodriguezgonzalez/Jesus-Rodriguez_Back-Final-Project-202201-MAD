@@ -2,6 +2,10 @@ name: Testing on push
 
 on: push
 
+env:
+    process.env.DBUSER: DBUSER
+    process.env.DBPASSWD: DBPASSWD
+    process.env.TESTDBNAME: TESTDBNAME
 jobs:
     test:
         name: Test passes
