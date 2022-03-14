@@ -19,3 +19,12 @@ export const getApartment = async (req, res, next) => {
         next(createError(err));
     }
 };
+
+export const deleteApartment = async (req, res, next) => {
+    try {
+        await Apartment.findByIdAndDelete(req.params.id);
+        res.json({ 'Deleted Apartment': req.params.id });
+    } catch (err) {
+        next(createError(err));
+    }
+};
