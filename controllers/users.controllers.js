@@ -1,6 +1,6 @@
 import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
-import { mongoConnect } from '../services/connection';
+import { mongoConnect } from '../services/connection.js';
 import { createToken } from '../services/auth.js';
 import bcrypt from 'bcryptjs';
 export const getAllUsers = async (req, res, next) => {
