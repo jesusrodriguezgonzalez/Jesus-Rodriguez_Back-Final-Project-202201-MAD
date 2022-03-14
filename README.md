@@ -1,1 +1,7 @@
-# Jesus-Rodriguez_Back-Final-Project-202201-MAD
+# eHOME
+
+The application that will make the management of your property easier
+
+## Authors
+
+-   [@Jesus Rodriguez](https://github.com/jesusrodriguezgonzalez)
