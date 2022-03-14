@@ -28,3 +28,35 @@ export const registerUser = async (req, resp, next) => {
         resp.json({ message: 'Error creating user' });
     }
 };
+
+export const login = async (req, resp, next) => {
+    const user = req.body;
+
+    const loginError = new Error('User or password invalid');
+    loginError.status = 401;
+    if (!user.email || !user.passwd) {
+        next(loginError);
+    } else {
+        const userFound = await User.findOne({
+            email: user.email,
+        });
+        if (!userFound) {
+            next(loginError);
+        } else if (
+            bcrypt.compareSync(user.passwd, userFound.passwd) === false
+        ) {
+            next(loginError);
+        } else {
+            const token = createToken({
+                email: userFound.email,
+                id: userFound.id,
+            });
+            resp.json({
+                token,
+                email: userFound.email,
+                id: userFound.id,
+                image: userFound.image,
+            });
+        }
+    }
+};
