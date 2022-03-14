@@ -60,3 +60,11 @@ export const login = async (req, resp, next) => {
         }
     }
 };
+
+export const updateUser = async (req, res, next) => {
+    await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        .then((resp) => {
+            res.json(resp);
+        })
+        .catch((err) => next(createError(err)));
+};

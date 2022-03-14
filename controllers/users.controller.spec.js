@@ -2,6 +2,7 @@ import {
     getAllUsers,
     registerUser,
     login,
+    updateUser,
 } from '../controllers/users.controllers.js';
 import { User } from '../models/user.models.js';
 import { mockRequest, mockResponse } from '../utils/interceptos';
@@ -149,6 +150,21 @@ describe("Given controllers' ", () => {
                     });
                 });
             });
+        });
+    });
+
+    describe('Testing updateUser()', () => {
+        User.findByIdAndUpdate.mockResolvedValue([
+            {
+                name: 'jesus',
+                age: 28,
+                surname: 'rodriguez',
+            },
+        ]);
+
+        test('Then call json', async () => {
+            await updateUser(req, res, next);
+            expect(res.json).toHaveBeenCalled();
         });
     });
 });
