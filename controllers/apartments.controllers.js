@@ -14,25 +14,8 @@ export const getAllApartments = async (req, res, next) => {
 export const getApartment = async (req, res, next) => {
     try {
         const resp = await Apartment.findById(req.params.id)
-            .populate('id_apartment', {
-                age: 0,
-                rol: 0,
-                city: 0,
-                current_user: 0,
-                history_user: 0,
-                photos: 0,
-                incidents: 0,
-                status: 0,
-            })
-            .populate('id_user', {
-                email: 0,
-                age: 0,
-                city: 0,
-                apartment_history: 0,
-                direction: 0,
-                rol: 0,
-                current_apartment: 0,
-            });
+            .populate('current_user', { id: 1, email: 1, name: 1, surname: 1 })
+            .populate('history_user', { id: 1, email: 1, name: 1, surname: 1 });
         res.status(200);
         res.json(resp);
     } catch (err) {
