@@ -27,7 +27,17 @@ describe(' Given INCIDENTS controllers', () => {
     };
     describe('Testing  getAllIncidents ', () => {
         test('should return correct mockResolvedValue', async () => {
-            Incident.find.mockResolvedValue([mockIncidents]);
+            Incident.find.mockReturnValue({
+                populate: () => ({
+                    populate: () => [
+                        {
+                            title: 'New Incidents',
+                            status: 'Open',
+                            priority: 'High',
+                        },
+                    ],
+                }),
+            });
 
             await getAllIncidents(req, res);
 
@@ -42,7 +52,13 @@ describe(' Given INCIDENTS controllers', () => {
         });
         describe('And it not works (promise is rejected)', () => {
             test('Then call next', async () => {
-                Incident.find.mockRejectedValue('Test error');
+                Incident.find.mockResolvedValue({
+                    populate: () => ({
+                        populate: () => {
+                            throw new Error('Test error');
+                        },
+                    }),
+                });
                 await getAllIncidents(req, res, next);
                 expect(next).toHaveBeenCalled();
             });
@@ -51,13 +67,17 @@ describe(' Given INCIDENTS controllers', () => {
 
     describe('Testing getIncidents()', () => {
         beforeEach(() => {
-            Incident.findById.mockResolvedValue([
-                {
-                    name: 'jesus',
-                    age: 28,
-                    surname: 'rodriguez',
-                },
-            ]);
+            Incident.findById.mockReturnValue({
+                populate: () => ({
+                    populate: () => [
+                        {
+                            title: 'New Incidents',
+                            status: 'Open',
+                            priority: 'High',
+                        },
+                    ],
+                }),
+            });
         });
 
         test('Then call json', async () => {
@@ -67,7 +87,13 @@ describe(' Given INCIDENTS controllers', () => {
 
         describe('And it not works (promise is rejected)', () => {
             test('Then call next', async () => {
-                Incident.findById.mockRejectedValue('Test error');
+                Incident.findById.mockResolvedValue({
+                    populate: () => ({
+                        populate: () => {
+                            throw new Error('Test error');
+                        },
+                    }),
+                });
                 await getIncidents(req, res, next);
                 expect(next).toHaveBeenCalled();
             });

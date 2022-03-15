@@ -5,7 +5,21 @@ import { createError } from '../services/create-error.js';
 export const getAllIncidents = async (req, res, next) => {
     await mongoConnect();
     try {
-        const resp = await Incident.find({});
+        const resp = await Incident.find({})
+            .populate('id_apartment', {
+                current_user: 0,
+                history_user: 0,
+                status: 0,
+                photos: 0,
+                incidents: 0,
+            })
+            .populate('id_user', {
+                age: 0,
+                city: 0,
+                direction: 0,
+                apartment_history: 0,
+                rol: 0,
+            });
         res.json(resp);
     } catch (err) {
         next(createError(err));
@@ -14,7 +28,21 @@ export const getAllIncidents = async (req, res, next) => {
 
 export const getIncidents = async (req, res, next) => {
     try {
-        const resp = await Incident.findById(req.params.id);
+        const resp = await Incident.findById(req.params.id)
+            .populate('id_apartment', {
+                current_user: 0,
+                history_user: 0,
+                status: 0,
+                photos: 0,
+                incidents: 0,
+            })
+            .populate('id_user', {
+                age: 0,
+                city: 0,
+                direction: 0,
+                apartment_history: 0,
+                rol: 0,
+            });
         res.json(resp);
     } catch (err) {
         next(createError(err));
