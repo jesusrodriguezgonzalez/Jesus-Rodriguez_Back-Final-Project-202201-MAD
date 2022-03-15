@@ -6,7 +6,10 @@ jobs:
     test:
         name: Test passes
         runs-on: ubuntu-latest
-
+        env:
+            DBUSER: secrets.DBUSER
+            DBPASSWD: secrets.DBPASSWD
+            TESTDBNAME: secrets.TESTDBNAME
         steps:
             - name: Git checkout
               uses: actions/checkout@v2
@@ -15,4 +18,4 @@ jobs:
               run: npm ci
 
             - name: Testing
-              run: DBUSER=secrets.DBUSER DBPASSWD=secrets.DBPASSWD TESTDBNAME=secrets.TESTDBNAME npm run test
+              run: npm run test
