@@ -13,7 +13,10 @@ export const getAllApartments = async (req, res, next) => {
 
 export const getApartment = async (req, res, next) => {
     try {
-        const resp = await Apartment.findById(req.params.id);
+        const resp = await Apartment.findById(req.params.id).populate(
+            'current_user',
+            { age: 0, rol: 0, city: 0, apartment_history: 0, direction: 0 }
+        );
         res.status(200);
         res.json(resp);
     } catch (err) {

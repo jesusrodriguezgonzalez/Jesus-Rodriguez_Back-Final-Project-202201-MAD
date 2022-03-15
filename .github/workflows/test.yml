@@ -3,9 +3,9 @@ name: Testing on push
 on: push
 
 env:
-    process.env.DBUSER: DBUSER
-    process.env.DBPASSWD: DBPASSWD
-    process.env.TESTDBNAME: TESTDBNAME
+    DBUSER: secrets.DBUSER
+    DBPASSWD: secrets.DBPASSWD
+    TESTDBNAME: secrets.TESTDBNAME
 jobs:
     test:
         name: Test passes
