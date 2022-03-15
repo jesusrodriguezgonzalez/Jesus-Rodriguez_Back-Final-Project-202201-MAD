@@ -3,9 +3,7 @@ name: Testing on push
 on: push
 
 env:
-    DBUSER: secrets.DBUSER
-    DBPASSWD: secrets.DBPASSWD
-    TESTDBNAME: secrets.TESTDBNAME
+
 jobs:
     test:
         name: Test passes
@@ -19,4 +17,4 @@ jobs:
               run: npm ci
 
             - name: Testing
-              run: npm run test
+              run: DBUSER=secrets.DBUSER DBPASSWD=secrets.DBPASSWD TESTDBNAME=secrets.TESTDBNAME npm run test
