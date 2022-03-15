@@ -2,15 +2,14 @@ name: Testing on push
 
 on: push
 
-env:
-    process.env.DBUSER: DBUSER
-    process.env.DBPASSWD: DBPASSWD
-    process.env.TESTDBNAME: TESTDBNAME
 jobs:
     test:
         name: Test passes
         runs-on: ubuntu-latest
-
+        env:
+            DBUSER: ${{secrets.DBUSER}}
+            DBPASSWD: ${{secrets.DBPASSWD}}
+            TESTDBNAME: ${{secrets.TESTDBNAME}}
         steps:
             - name: Git checkout
               uses: actions/checkout@v2

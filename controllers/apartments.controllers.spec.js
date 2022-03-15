@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+import { server } from '../index.js';
 import { Apartment } from '../models/apartment.models.js';
 import {
     getAllApartments,
@@ -19,13 +21,17 @@ describe(' Given APARTMENTS controllers', () => {
         res.status = jest.fn().mockReturnValue(res);
         next = jest.fn();
     });
+    afterAll(async () => {
+        server.close();
+        await mongoose.disconnect();
+    });
 
     const mockApartment = {
         direction: 'New Direction',
         cp: '28010',
         province: 'Madrid',
     };
-    describe('Testing  getApartment ', () => {
+    describe('Testing  getAllapartments() ', () => {
         test('should return correct mockResolvedValue', async () => {
             Apartment.find.mockResolvedValue([mockApartment]);
             await getAllApartments(req, res);
@@ -50,13 +56,17 @@ describe(' Given APARTMENTS controllers', () => {
 
     describe('Testing getApartment()', () => {
         beforeEach(() => {
-            Apartment.findById.mockResolvedValue([
-                {
-                    direction: 'New Direction',
-                    cp: '28010',
-                    province: 'Madrid',
-                },
-            ]);
+            Apartment.findById.mockReturnValue({
+                populate: () => ({
+                    populate: () => [
+                        {
+                            direction: 'New Direction',
+                            cp: '28010',
+                            province: 'Madrid',
+                        },
+                    ],
+                }),
+            });
         });
 
         test('Then call json', async () => {
@@ -66,7 +76,13 @@ describe(' Given APARTMENTS controllers', () => {
 
         describe('And it not works (promise is rejected)', () => {
             test('Then call next', async () => {
-                Apartment.findById.mockRejectedValue('Test error');
+                Apartment.findById.mockResolvedValue({
+                    populate: () => ({
+                        populate: () => {
+                            throw new Error('Test error');
+                        },
+                    }),
+                });
                 await getApartment(req, res, next);
                 expect(next).toHaveBeenCalled();
             });

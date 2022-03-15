@@ -2,7 +2,11 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    type_incidence: { type: String, required: true },
+    type_incidence: {
+        type: String,
+        required: true,
+        enum: ['Administrative', 'Break', 'Paid'],
+    },
     id_apartment: {
         type: [
             {
@@ -19,11 +23,17 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
-    status: { type: String, enum: ['Open', 'Closed'], default: 'Open' },
+    status: {
+        type: String,
+        enum: ['Open', 'Closed'],
+        default: 'Open',
+        required: true,
+    },
     priority: {
         type: String,
         enum: ['High', 'Medium', 'Low'],
         default: 'Medium',
+        required: true,
     },
     date_created: { type: Date },
     date_closed: { type: Date },
