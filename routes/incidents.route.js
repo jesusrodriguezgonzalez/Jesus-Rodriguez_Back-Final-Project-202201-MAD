@@ -2,12 +2,12 @@ import express from 'express';
 const router = express.Router();
 
 import * as controller from '../controllers/incidents.controllers.js';
-import { loginRequired } from '../middleware/login-control.js';
+import { checkCreatorIncidents } from '../middleware/checkCreatorIncidents.js';
 
-router.get('/', loginRequired, controller.getAllIncidents);
-router.get('/', loginRequired, controller.getIncidents);
-router.post('/', loginRequired, controller.newIncident);
-router.delete('/:id', loginRequired, controller.deleteIncident);
-router.patch('/:id', loginRequired, controller.updateIncident);
+router.get('/', controller.getAllIncidents);
+router.get('/', controller.getIncidents);
+router.post('/', controller.newIncident);
+router.delete('/:id', controller.deleteIncident);
+router.patch('/:id', checkCreatorIncidents, controller.updateIncident);
 
 export default router;
