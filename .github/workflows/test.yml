@@ -2,8 +2,6 @@ name: Testing on push
 
 on: push
 
-env:
-
 jobs:
     test:
         name: Test passes
