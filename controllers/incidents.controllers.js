@@ -7,8 +7,8 @@ export const getAllIncidents = async (req, res, next) => {
     try {
         const resp = await Incident.find({})
             .populate('id_apartment', {
-                current_user: 0,
-                history_user: 0,
+                current_rented: 0,
+                history_rented: 0,
                 status: 0,
                 photos: 0,
                 incidents: 0,
@@ -30,8 +30,8 @@ export const getIncidents = async (req, res, next) => {
     try {
         const resp = await Incident.findById(req.params.id)
             .populate('id_apartment', {
-                current_user: 0,
-                history_user: 0,
+                current_rented: 0,
+                history_rented: 0,
                 status: 0,
                 photos: 0,
                 incidents: 0,
