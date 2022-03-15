@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     direction: { type: String, required: true },
     cp: { type: Number, required: true },
     province: { type: String, required: true },
-    current_user: {
+    current_rented: {
         type: [
             {
                 type: mongoose.Types.ObjectId,
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
-    history_user: {
+    history_rented: {
         type: [
             {
                 type: mongoose.Types.ObjectId,
@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
     },
+    owner: { type: String, required: true },
 });
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
