@@ -42,6 +42,7 @@ export const updateApartment = async (req, res, next) => {
             }
         );
         res.json(resp);
+        res.status(200);
     } catch (err) {
         next(createError(err));
     }

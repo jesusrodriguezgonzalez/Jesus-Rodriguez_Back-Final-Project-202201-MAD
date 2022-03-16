@@ -1,19 +1,13 @@
 import { loginRequired } from '../middleware/login-control.js';
 import { verifyToken } from '../services/auth.js';
-
+import { tokenError } from '../utils/errors.js';
 jest.mock('../services/auth.js');
 
 describe('Given a route intercepted by loginRequired', () => {
     let req;
     let res;
     let next;
-    let tokenError;
     beforeEach(() => {
-        tokenError = {
-            message: 'token missing or invalid',
-            status: '401',
-            name: 'Unauthorized',
-        };
         req = { params: {} };
         res = {};
         req.get = jest.fn();
@@ -28,7 +22,7 @@ describe('Given a route intercepted by loginRequired', () => {
                 req.get.mockReturnValue('bearer token');
                 verifyToken.mockReturnValue({});
                 loginRequired(req, res, next);
-                expect(next).toHaveBeenCalledWith();
+                expect(next).toHaveBeenCalled();
             });
         });
         describe('And token is not valid', () => {
