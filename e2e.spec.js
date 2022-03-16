@@ -40,7 +40,7 @@ describe('Given app', () => {
                     .post('/users/register')
                     .send(mock.userMockOK);
                 id = resp.body._id;
-                expect(resp.status).toBe(200);
+                expect(resp.status).toBe(201);
             });
             describe('User creation requires the fields email, name and password', () => {
                 test('It returns status 500', async () => {
@@ -59,14 +59,15 @@ describe('Given app', () => {
                 tokenUser = resp.body.token;
                 expect(resp.status).toBe(200);
             });
-            test('If the password is wrong, It returns status 401', async () => {
+            test('If the user or password is wrong, It returns status 401', async () => {
                 const resp = await request(app)
                     .post('/users/login')
                     .send({ email: 'jesus@gmail.com ', passwd: '1234' });
                 expect(resp.status).toBe(401);
+                expect(resp.body.error).toBe('User or password invalid');
             });
         });
-        describe('When PATCH /users with invalid authorization bearer', () => {
+        describe('When PATCH /users with invalid path', () => {
             test('It returns status 500', async () => {
                 const response = await request(app)
                     .patch('/users/1234')
@@ -156,7 +157,6 @@ describe('Given app', () => {
                     .patch(`/apartments/${idPatchApartments}`)
                     .set('Authorization', 'camion ' + tokenUser)
                     .send({ newProperty: 'new' });
-                console.log(response.message);
                 expect(response.status).toBe(401);
                 expect(response.body.error).toBe('token missing or invalid');
             });
