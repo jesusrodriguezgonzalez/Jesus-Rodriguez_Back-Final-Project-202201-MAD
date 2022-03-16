@@ -12,5 +12,11 @@ export const unAuthorized = {
 export const createUserError = {
     message: 'The user must have email, name and password',
     status: '400',
-    name: 'User Creation error',
+    name: 'User creation error',
+};
+
+export const errUpdateUser = {
+    message: 'The user has not been updated',
+    status: '500',
+    name: 'User update error',
 };
