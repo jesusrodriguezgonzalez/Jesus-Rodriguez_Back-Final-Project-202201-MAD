@@ -12,6 +12,7 @@ export const isOwner = async (req, res, next) => {
         token = authorization.substring(7);
         decodedToken = verifyToken(token);
         const apartment = await Apartment.findById(id);
+
         if (apartment.owner === decodedToken.id) {
             next();
         } else {

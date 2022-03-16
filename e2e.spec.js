@@ -40,7 +40,6 @@ describe('Given app', () => {
                     .post('/users/register')
                     .send(mock.userMockOK);
                 id = resp.body._id;
-                console.log(id);
                 expect(resp.status).toBe(200);
             });
             describe('User creation requires the fields email, name and password', () => {
@@ -48,7 +47,7 @@ describe('Given app', () => {
                     const resp = await request(app)
                         .post('/users/register')
                         .send({ email: 'pepe@gmail.com', name: 'pepe' });
-                    expect(resp.status).toBe(500);
+                    expect(resp.status).toBe(400);
                 });
             });
         });
@@ -58,7 +57,6 @@ describe('Given app', () => {
                     .post('/users/login')
                     .send({ email: 'jesus@gmail.com ', passwd: '12345' });
                 tokenUser = resp.body.token;
-                console.log(resp.body);
                 expect(resp.status).toBe(200);
             });
             test('If the password is wrong, It returns status 401', async () => {
@@ -71,9 +69,6 @@ describe('Given app', () => {
     });
 
     describe('TESTING INCIDENT NODE', () => {
-        beforeEach(async () => {
-            await Incident.deleteMany({});
-        });
         describe('When GET /incidents', () => {
             test('It returns status 200', async () => {
                 const response = await request(app)
@@ -94,18 +89,17 @@ describe('Given app', () => {
                         id_user: id,
                     });
                 idIncident = response.body._id;
-                console.log(idIncident);
                 expect(response.status).toBe(201);
             });
         });
-        // describe('When DELETE /incidents', () => {
-        //     test('It returns status 200', async () => {
-        //         const response = await request(app)
-        //             .delete(`/incidents/${idIncident}`)
-        //             .set('Authorization', 'bearer ' + tokenUser);
-        //         expect(response.status).toBe(200);
-        //     });
-        // });
+        describe('When DELETE /incidents', () => {
+            test('It returns status 200', async () => {
+                const response = await request(app)
+                    .delete(`/incidents/${idIncident}`)
+                    .set('Authorization', 'bearer ' + tokenUser);
+                expect(response.status).toBe(200);
+            });
+        });
     });
 
     describe('TESTING APARTMENTS NODE', () => {
@@ -127,7 +121,6 @@ describe('Given app', () => {
                         photos: [],
                         owner: id,
                     });
-                console.log(response.body);
                 idPatchApartments = response.body._id;
                 expect(response.status).toBe(201);
             });
