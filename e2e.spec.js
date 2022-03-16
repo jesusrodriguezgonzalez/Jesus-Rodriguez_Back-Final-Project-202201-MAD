@@ -66,6 +66,14 @@ describe('Given app', () => {
                 expect(resp.status).toBe(401);
             });
         });
+        describe('When PATCH /users with invalid authorization bearer', () => {
+            test('It returns status 500', async () => {
+                const response = await request(app)
+                    .patch('/users/1234')
+                    .set('Authorization', 'bearer ' + tokenUser);
+                expect(response.status).toBe(500);
+            });
+        });
     });
 
     describe('TESTING INCIDENT NODE', () => {
@@ -140,6 +148,17 @@ describe('Given app', () => {
                     .set('Authorization', 'bearer ' + tokenUser)
                     .send({ newProperty: 'new' });
                 expect(response.status).toBe(200);
+            });
+        });
+        describe('When PATCH /apartments with wrong authorization type', () => {
+            test('It returns status 401', async () => {
+                const response = await request(app)
+                    .patch(`/apartments/${idPatchApartments}`)
+                    .set('Authorization', 'camion ' + tokenUser)
+                    .send({ newProperty: 'new' });
+                console.log(response.message);
+                expect(response.status).toBe(401);
+                expect(response.body.error).toBe('token missing or invalid');
             });
         });
     });

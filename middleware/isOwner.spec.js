@@ -47,4 +47,18 @@ describe('Given a route intercepted by isOwner', () => {
             });
         });
     });
+
+    describe('when i call with an invalid token bearer', () => {
+        test('Then call next with error', async () => {
+            Apartment.findById.mockResolvedValue(mockApartment);
+            req.get.mockReturnValue('invalidadbearer');
+            verifyToken.mockReturnValue({ id: '1' });
+            await isOwner(req, res, next);
+            expect(next).toHaveBeenCalledWith({
+                message: 'token missing or invalid',
+                name: 'Unauthorized',
+                status: '401',
+            });
+        });
+    });
 });

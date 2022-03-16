@@ -1,5 +1,6 @@
 import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
+import { errUpdateUser } from '../utils/errors.js';
 import { mongoConnect } from '../services/connection.js';
 import { createToken } from '../services/auth.js';
 import { createUserError } from '../utils/errors.js';
@@ -65,6 +66,6 @@ export const updateUser = async (req, res, next) => {
         });
         res.json(resp);
     } catch (err) {
-        next(createError(err));
+        next(errUpdateUser);
     }
 };

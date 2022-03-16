@@ -33,15 +33,28 @@ describe('Given a route intercepted by checkCreatorIncidents', () => {
             expect(next).toHaveBeenCalled();
         });
     });
-
-    describe('when i call with an invalid id', () => {
-        test('Then call next with error', async () => {
+    describe('when i call with invalid id', () => {
+        test('Then call next', async () => {
             Incident.findById.mockResolvedValue(mockIncident);
             req.get.mockReturnValue('bearer token');
-            verifyToken.mockReturnValue({ id: '225222' });
+            verifyToken.mockReturnValue({ id: 'invalidId' });
             await checkCreatorIncidents(req, res, next);
             expect(next).toHaveBeenCalledWith({
                 message: 'Unauthorized',
+                name: 'Unauthorized',
+                status: '401',
+            });
+        });
+    });
+
+    describe('when i call with an invalid bearer authorization ', () => {
+        test('Then call next with error', async () => {
+            Incident.findById.mockResolvedValue(mockIncident);
+            req.get.mockReturnValue('invalidadbearer');
+            verifyToken.mockReturnValue({ id: '62304dc95762224f4b796d98' });
+            await checkCreatorIncidents(req, res, next);
+            expect(next).toHaveBeenCalledWith({
+                message: 'token missing or invalid',
                 status: '401',
                 name: 'Unauthorized',
             });

@@ -8,7 +8,7 @@ export const isOwner = async (req, res, next) => {
     let token;
 
     let decodedToken;
-    if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+    if (authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7);
         decodedToken = verifyToken(token);
         const apartment = await Apartment.findById(id);
