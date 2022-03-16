@@ -1,19 +1,12 @@
 import { verifyToken } from '../services/auth.js';
 import { Apartment } from '../models/apartment.models.js';
+import { tokenError, unAuthorized } from '../utils/errors.js';
+
 export const isOwner = async (req, res, next) => {
     const { id } = req.params;
     const authorization = req.get('authorization');
     let token;
-    const tokenError = {
-        message: 'token missing or invalid',
-        status: '401',
-        name: 'Unauthorized',
-    };
-    const unAuthorized = {
-        message: 'Unauthorized',
-        status: '401',
-        name: 'Unauthorized',
-    };
+
     let decodedToken;
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7);
