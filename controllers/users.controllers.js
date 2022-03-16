@@ -1,9 +1,8 @@
 import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
-import { errUpdateUser } from '../utils/errors.js';
+import { errUpdateUser, createUserError } from '../utils/errors.js';
 import { mongoConnect } from '../services/connection.js';
 import { createToken } from '../services/auth.js';
-import { createUserError } from '../utils/errors.js';
 import bcrypt from 'bcryptjs';
 export const getAllUsers = async (req, res, next) => {
     await mongoConnect();
@@ -20,8 +19,8 @@ export const registerUser = async (req, resp, next) => {
         const encryptedPasswd = bcrypt.hashSync(req.body.passwd);
         const userData = { ...req.body, passwd: encryptedPasswd };
         const result = await User.create(userData);
-        resp.json(result);
         resp.status(201);
+        resp.json(result);
     } catch (error) {
         next(createUserError);
     }
