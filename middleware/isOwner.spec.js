@@ -24,13 +24,27 @@ describe('Given a route intercepted by isOwner', () => {
         owner: '12345',
     };
 
-    describe('And token is not valid', () => {
-        test('Then call next with error', () => {
+    describe('when i call with a valid id', () => {
+        test('Then call next ', async () => {
             Apartment.findById.mockResolvedValue(mockApartment);
             req.get.mockReturnValue('bearer token');
-            verifyToken.mockReturnValue({ id: '1234' });
-            isOwner(req, res, next);
-            expect(next).toHaveBeenCalledWith('pepe');
+            verifyToken.mockReturnValue({ id: '12345' });
+            await isOwner(req, res, next);
+            expect(next).toHaveBeenCalled();
+        });
+    });
+
+    describe('when i call with an invalid id', () => {
+        test('Then call next with error', async () => {
+            Apartment.findById.mockResolvedValue(mockApartment);
+            req.get.mockReturnValue('bearer token');
+            verifyToken.mockReturnValue({ id: '1' });
+            await isOwner(req, res, next);
+            expect(next).toHaveBeenCalledWith({
+                message: 'Unauthorized',
+                name: 'Unauthorized',
+                status: '401',
+            });
         });
     });
 });

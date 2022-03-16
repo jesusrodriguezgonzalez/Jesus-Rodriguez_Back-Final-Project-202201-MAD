@@ -9,7 +9,8 @@ export const checkCreatorIncidents = async (req, res, next) => {
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7);
         decodedToken = verifyToken(token);
-        const { id_user } = await Incident.findById(id);
+        const response = await Incident.findById(id);
+        const { id_user } = response;
         const idUserIncident = id_user.toString();
 
         if (idUserIncident === decodedToken.id) {
