@@ -10,9 +10,10 @@ dotenv.config();
  */
 export function createToken(user) {
     const tokenPayload = {
-        name: user.name,
+        email: user.email,
         id: user.id,
     };
+    console.log(tokenPayload);
     const secret = process.env.SECRET;
     return jwt.sign(tokenPayload, secret);
 }

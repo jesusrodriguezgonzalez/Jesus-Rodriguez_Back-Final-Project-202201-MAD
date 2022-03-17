@@ -20,3 +20,9 @@ export const errUpdateUser = {
     status: '500',
     name: 'User update error',
 };
+
+export const loginError = {
+    message: 'User or password invalid',
+    status: '401',
+    name: 'Unauthorized ',
+};

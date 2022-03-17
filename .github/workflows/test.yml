@@ -10,6 +10,8 @@ jobs:
             DBUSER: ${{secrets.DBUSER}}
             DBPASSWD: ${{secrets.DBPASSWD}}
             TESTDBNAME: ${{secrets.TESTDBNAME}}
+            PORT: ${{secrets.PORT}}
+            SECRET: ${{secrets.SECRET}}
         steps:
             - name: Git checkout
               uses: actions/checkout@v2
