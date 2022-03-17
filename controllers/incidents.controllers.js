@@ -1,6 +1,7 @@
 import { mongoConnect } from '../services/connection.js';
 import { Incident } from '../models/incident.model.js';
 import { createError } from '../services/create-error.js';
+import { Apartment } from '../models/apartment.models.js';
 
 export const getAllIncidents = async (req, res, next) => {
     await mongoConnect();
@@ -71,9 +72,15 @@ export const updateIncident = async (req, res, next) => {
 
 export const newIncident = async (req, res, next) => {
     try {
+        console.log(req.body);
         const result = await Incident.create(req.body);
-        res.status(201);
-        res.json(result);
+        console.log(result);
+        const { id, id_apartment } = result;
+        const idIncidents = id.toString();
+        const apartment = await Apartment.findById(id_apartment);
+        apartment.incidents.push(idIncidents);
+        await apartment.save();
+        res.status(201).json(result);
     } catch (error) {
         next(createError(error));
     }
