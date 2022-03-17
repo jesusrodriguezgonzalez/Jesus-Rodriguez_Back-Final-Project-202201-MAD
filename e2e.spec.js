@@ -63,7 +63,7 @@ describe('Given app', () => {
                     .post('/users/login')
                     .send({ email: 'jesus@gmail.com ', passwd: '1234' });
                 expect(resp.status).toBe(401);
-                expect(resp.body.error).toBe('User or password invalid');
+                expect(resp.body.error).toBe('User or passwd invalid');
             });
         });
         describe('When PATCH /users with invalid path', () => {

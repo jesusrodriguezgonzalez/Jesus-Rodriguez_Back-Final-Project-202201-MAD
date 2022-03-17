@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     direction: { type: String, required: true },
     cp: { type: Number, required: true },
     province: { type: String, required: true },
-    current_rented: {
+    current_tenant: {
         type: [
             {
                 type: mongoose.Types.ObjectId,
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
-    history_rented: {
+    history_tenant: {
         type: [
             {
                 type: mongoose.Types.ObjectId,

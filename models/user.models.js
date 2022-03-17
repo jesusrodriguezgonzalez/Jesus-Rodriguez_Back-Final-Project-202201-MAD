@@ -18,8 +18,15 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
     },
-    current_apartment: { type: String },
-    rol: { type: String, enum: ['Owner', 'Renter'], default: 'Owner' },
+    current_apartment: {
+        type: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
+    },
+    rol: { type: String, enum: ['Owner', 'Tenant'], default: 'Owner' },
     image: { type: String },
 });
 userSchema.set('toJSON', {

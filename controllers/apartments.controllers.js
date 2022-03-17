@@ -1,6 +1,8 @@
 import { mongoConnect } from '../services/connection.js';
 import { createError } from '../services/create-error.js';
 import { Apartment } from '../models/apartment.models.js';
+import { User } from '../models/user.models.js';
+import { errUpdateRenter } from '../utils/errors.js';
 export const getAllApartments = async (req, res, next) => {
     await mongoConnect();
     try {
@@ -55,5 +57,26 @@ export const newApartment = async (req, res, next) => {
         res.json(result);
     } catch (error) {
         next(createError(error));
+    }
+};
+
+export const addTenat = async (req, res, next) => {
+    const emailTenant = req.body.email;
+    const idApartment = req.params.id;
+    try {
+        const userTenant = await User.findOne({ email: emailTenant });
+        const resp = await Apartment.findByIdAndUpdate(
+            idApartment,
+            { current_rented: userTenant.id },
+            {
+                new: true,
+            }
+        );
+        userTenant.current_apartment = idApartment;
+        await userTenant.save();
+        res.json(resp);
+        res.status(200);
+    } catch (err) {
+        next(errUpdateRenter);
     }
 };

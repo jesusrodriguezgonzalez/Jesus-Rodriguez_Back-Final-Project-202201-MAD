@@ -72,9 +72,7 @@ export const updateIncident = async (req, res, next) => {
 
 export const newIncident = async (req, res, next) => {
     try {
-        console.log(req.body);
         const result = await Incident.create(req.body);
-        console.log(result);
         const { id, id_apartment } = result;
         const idIncidents = id.toString();
         const apartment = await Apartment.findById(id_apartment);
