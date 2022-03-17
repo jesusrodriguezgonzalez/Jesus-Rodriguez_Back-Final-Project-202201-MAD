@@ -1,4 +1,5 @@
 import { Incident } from '../models/incident.model.js';
+import { Apartment } from '../models/apartment.models.js';
 import {
     getAllIncidents,
     getIncidents,
@@ -8,6 +9,7 @@ import {
 } from './incidents.controllers';
 
 jest.mock('../models/incident.model.js');
+jest.mock('../models/apartment.models.js');
 describe(' Given INCIDENTS controllers', () => {
     let req;
     let res;
@@ -148,24 +150,36 @@ describe(' Given INCIDENTS controllers', () => {
 
     describe('Testing  newIncident ', () => {
         test('should return correct mockResolvedValue', async () => {
-            Incident.create.mockResolvedValue([
-                {
-                    name: 'jesus rodriguez',
-                    age: '22',
-                    email: 'jesus@gmail.com',
-                },
-            ]);
+            Apartment.findById.mockResolvedValue({
+                direction: 'C/Vallehermoso,110',
+                cp: '28010',
+                province: 'Madrid',
+                current_user: '62304dc95762224f4b796d98',
+                status: 'Leased',
+                photos: [],
+                owner: '62304dc95762224f4b796d98',
+                incidents: [],
+                save: jest.fn(),
+            });
 
-            await newIncident(req, res);
+            Incident.create.mockResolvedValue({
+                title: 'New Incidents',
+                status: 'Open',
+                priority: 'High',
+                id: '123',
+                id_apartment: '456',
+            });
+
+            await newIncident(req, res, next);
 
             expect(res.json).toHaveBeenCalledTimes(1);
-            expect(res.json).toHaveBeenCalledWith([
-                {
-                    name: 'jesus rodriguez',
-                    age: '22',
-                    email: 'jesus@gmail.com',
-                },
-            ]);
+            expect(res.json).toHaveBeenCalledWith({
+                title: 'New Incidents',
+                status: 'Open',
+                priority: 'High',
+                id: '123',
+                id_apartment: '456',
+            });
         });
         describe('And it not works (promise is rejected)', () => {
             test('Then call next', async () => {

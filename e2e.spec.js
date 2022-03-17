@@ -76,45 +76,7 @@ describe('Given app', () => {
         });
     });
 
-    describe('TESTING INCIDENT NODE', () => {
-        describe('When GET /incidents', () => {
-            test('It returns status 200', async () => {
-                const response = await request(app)
-                    .get('/apartments')
-                    .set('Authorization', 'bearer ' + tokenUser);
-                expect(response.status).toBe(200);
-            });
-        });
-        describe('When POST /incidents', () => {
-            test('It returns status 200', async () => {
-                const response = await request(app)
-                    .post('/incidents')
-                    .set('Authorization', 'bearer ' + tokenUser)
-                    .send({
-                        title: 'New incidents',
-                        type_incidence: 'Break',
-                        id_apartment: idPatchApartments,
-                        id_user: id,
-                    });
-                idIncident = response.body._id;
-                expect(response.status).toBe(201);
-            });
-        });
-        describe('When DELETE /incidents', () => {
-            test('It returns status 200', async () => {
-                const response = await request(app)
-                    .delete(`/incidents/${idIncident}`)
-                    .set('Authorization', 'bearer ' + tokenUser);
-                expect(response.status).toBe(200);
-            });
-        });
-    });
-
     describe('TESTING APARTMENTS NODE', () => {
-        beforeAll(async () => {
-            await Apartment.deleteMany({});
-        });
-
         describe('When POST /apartments', () => {
             test('It returns status 200', async () => {
                 const response = await request(app)
@@ -127,6 +89,7 @@ describe('Given app', () => {
                         current_user: '62304dc95762224f4b796d98',
                         status: 'Leased',
                         photos: [],
+                        incidents: [],
                         owner: id,
                     });
                 idPatchApartments = response.body._id;
@@ -158,6 +121,40 @@ describe('Given app', () => {
                     .send({ newProperty: 'new' });
                 expect(response.status).toBe(401);
                 expect(response.body.error).toBe('token missing or invalid');
+            });
+        });
+    });
+
+    describe('TESTING INCIDENT NODE', () => {
+        describe('When GET /incidents', () => {
+            test('It returns status 200', async () => {
+                const response = await request(app)
+                    .get('/apartments')
+                    .set('Authorization', 'bearer ' + tokenUser);
+                expect(response.status).toBe(200);
+            });
+        });
+        describe('When POST /incidents', () => {
+            test('It returns status 200', async () => {
+                const response = await request(app)
+                    .post('/incidents')
+                    .set('Authorization', 'bearer ' + tokenUser)
+                    .send({
+                        title: 'New incidents',
+                        type_incidence: 'Break',
+                        id_apartment: idPatchApartments,
+                        id_user: id,
+                    });
+                idIncident = response.body._id;
+                expect(response.status).toBe(201);
+            });
+        });
+        describe('When DELETE /incidents', () => {
+            test('It returns status 200', async () => {
+                const response = await request(app)
+                    .delete(`/incidents/${idIncident}`)
+                    .set('Authorization', 'bearer ' + tokenUser);
+                expect(response.status).toBe(200);
             });
         });
     });
