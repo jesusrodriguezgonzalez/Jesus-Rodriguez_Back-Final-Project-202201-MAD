@@ -3,6 +3,7 @@ import { createError } from '../services/create-error.js';
 import { errUpdateUser, createUserError } from '../utils/errors.js';
 import { mongoConnect } from '../services/connection.js';
 import { createToken } from '../services/auth.js';
+import { loginError } from '../utils/errors.js';
 import bcrypt from 'bcryptjs';
 export const getAllUsers = async (req, res, next) => {
     await mongoConnect();
@@ -28,9 +29,6 @@ export const registerUser = async (req, resp, next) => {
 
 export const login = async (req, resp, next) => {
     const user = req.body;
-
-    const loginError = new Error('User or password invalid');
-    loginError.status = 401;
     if (!user.email || !user.passwd) {
         next(loginError);
     } else {

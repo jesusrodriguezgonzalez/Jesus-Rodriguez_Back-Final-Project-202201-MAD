@@ -30,7 +30,6 @@ describe('Given app', () => {
                 const response = await request(app)
                     .get('/users')
                     .set('Authorization', 'bearer ' + token);
-
                 expect(response.status).toBe(200);
             });
         });
