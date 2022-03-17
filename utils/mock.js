@@ -14,6 +14,7 @@ export const userMockOK = {
     phone: '672264548',
     city: 'Granada',
     direction: 'Vallehermoso 110',
+    current_tenant: '123456',
     rol: 'Owner',
     image: 'https://enciclopedia.banrepcultural.org/images/5/55/Avatar-hombre.jpg',
 };

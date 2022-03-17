@@ -10,7 +10,7 @@ export const unAuthorized = {
 };
 
 export const createUserError = {
-    message: 'The user must have email, name and password',
+    message: 'The user must have email, name and passwd',
     status: '400',
     name: 'User creation error',
 };
@@ -22,7 +22,13 @@ export const errUpdateUser = {
 };
 
 export const loginError = {
-    message: 'User or password invalid',
+    message: 'User or passwd invalid',
     status: '401',
     name: 'Unauthorized ',
+};
+
+export const errUpdateRenter = {
+    message: 'It is necessary to add the user email and apartment id ',
+    status: '400',
+    name: 'Bad Request ',
 };

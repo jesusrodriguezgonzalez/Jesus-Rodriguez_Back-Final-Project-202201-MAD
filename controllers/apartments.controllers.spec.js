@@ -1,15 +1,18 @@
 import mongoose from 'mongoose';
 import { server } from '../index.js';
 import { Apartment } from '../models/apartment.models.js';
+import { User } from '../models/user.models.js';
 import {
     getAllApartments,
     getApartment,
     deleteApartment,
     updateApartment,
     newApartment,
+    addTenat,
 } from './apartments.controllers.js';
 
 jest.mock('../models/apartment.models.js');
+jest.mock('../models/user.models.js');
 describe(' Given APARTMENTS controllers', () => {
     let req;
     let res;
@@ -31,6 +34,7 @@ describe(' Given APARTMENTS controllers', () => {
         cp: '28010',
         province: 'Madrid',
     };
+
     describe('Testing  getAllapartments() ', () => {
         test('should return correct mockResolvedValue', async () => {
             Apartment.find.mockResolvedValue([mockApartment]);
@@ -153,6 +157,37 @@ describe(' Given APARTMENTS controllers', () => {
             test('Then call next', async () => {
                 Apartment.create.mockRejectedValue('Test error');
                 await newApartment(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Testing addTenat()', () => {
+        beforeEach(() => {
+            Apartment.findByIdAndUpdate.mockResolvedValue([
+                {
+                    mockApartment,
+                },
+            ]);
+            req = {
+                body: { email: 'jesus@gmail.com' },
+                params: { id: '12345' },
+            };
+            User.findOne.mockResolvedValue({
+                email: 'jesus@gmail.com',
+                save: jest.fn(),
+            });
+        });
+
+        test('Then call json', async () => {
+            await addTenat(req, res, next);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                Apartment.findByIdAndUpdate.mockRejectedValue('Test error');
+                await addTenat(req, res, next);
                 expect(next).toHaveBeenCalled();
             });
         });

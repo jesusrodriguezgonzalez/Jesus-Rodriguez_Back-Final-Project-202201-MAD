@@ -10,5 +10,6 @@ router.get('/:id', loginRequired, controller.getApartment);
 router.patch('/:id', loginRequired, isOwner, controller.updateApartment);
 router.post('/', loginRequired, controller.newApartment);
 router.delete('/:id', loginRequired, isOwner, controller.deleteApartment);
+router.patch('/add-tenant/:id', loginRequired, isOwner, controller.addTenat);
 
 export default router;
