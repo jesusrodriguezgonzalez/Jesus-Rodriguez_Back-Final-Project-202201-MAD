@@ -6,7 +6,7 @@ export const incidentMockOK = {
 };
 
 export const userMockOK = {
-    email: 'jesus@gmail.com ',
+    email: 'jesus@gmail.com',
     passwd: '12345',
     name: 'jesus',
     surname: 'rodriguez',
@@ -22,7 +22,6 @@ export const apartmentsOK = {
     direction: 'C/Vallehermoso,110',
     cp: '28010',
     province: 'Madrid',
-    current_user: '62304dc95762224f4b796d98',
     status: 'Leased',
     photos: [],
     owner: '62304dc95762224f4b796d98',

@@ -53,6 +53,7 @@ export const getIncidents = async (req, res, next) => {
 export const deleteIncident = async (req, res, next) => {
     try {
         await Incident.findByIdAndDelete(req.params.id);
+        res.status(202);
         res.json({ 'Deleted Incident': req.params.id });
     } catch (err) {
         next(createError(err));
