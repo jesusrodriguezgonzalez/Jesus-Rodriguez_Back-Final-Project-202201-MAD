@@ -3,6 +3,7 @@ import { createError } from '../services/create-error.js';
 import { Apartment } from '../models/apartment.models.js';
 import { User } from '../models/user.models.js';
 import { errUpdateRenter } from '../utils/errors.js';
+
 export const getAllApartments = async (req, res, next) => {
     await mongoConnect();
     try {
@@ -28,6 +29,7 @@ export const getApartment = async (req, res, next) => {
 export const deleteApartment = async (req, res, next) => {
     try {
         await Apartment.findByIdAndDelete(req.params.id);
+        res.status(202);
         res.json({ 'Deleted Apartment': req.params.id });
     } catch (err) {
         next(createError(err));
@@ -63,20 +65,24 @@ export const newApartment = async (req, res, next) => {
 export const addTenat = async (req, res, next) => {
     const emailTenant = req.body.email;
     const idApartment = req.params.id;
-    try {
-        const userTenant = await User.findOne({ email: emailTenant });
-        const resp = await Apartment.findByIdAndUpdate(
-            idApartment,
-            { current_rented: userTenant.id },
-            {
-                new: true,
-            }
-        );
-        userTenant.current_apartment = idApartment;
-        await userTenant.save();
-        res.json(resp);
-        res.status(200);
-    } catch (err) {
+    if (emailTenant) {
+        try {
+            const userTenant = await User.findOne({ email: emailTenant });
+            const resp = await Apartment.findByIdAndUpdate(
+                idApartment,
+                { current_rented: userTenant.id },
+                {
+                    new: true,
+                }
+            );
+            userTenant.current_apartment = idApartment;
+            await userTenant.save();
+            res.json(resp);
+            res.status(200);
+        } catch (err) {
+            next(createError(err));
+        }
+    } else {
         next(errUpdateRenter);
     }
 };

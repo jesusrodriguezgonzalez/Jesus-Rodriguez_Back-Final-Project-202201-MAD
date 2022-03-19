@@ -3,6 +3,7 @@ import {
     registerUser,
     login,
     updateUser,
+    deleteUser,
 } from '../controllers/users.controllers.js';
 import { User } from '../models/user.models.js';
 import { createToken } from '../services/auth';
@@ -172,6 +173,29 @@ describe("Given USERS controllers' ", () => {
             test('Then call next', async () => {
                 User.findByIdAndUpdate.mockRejectedValue('Test error');
                 await getAllUsers(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Testing deleteUser()', () => {
+        beforeEach(() => {
+            User.findByIdAndDelete.mockResolvedValue([
+                {
+                    'Deleted User': 12,
+                },
+            ]);
+        });
+
+        test('Then call json', async () => {
+            await deleteUser(req, res, next);
+            expect(res.json).toHaveBeenCalled();
+        });
+
+        describe('And it not works (promise is rejected)', () => {
+            test('Then call next', async () => {
+                User.findByIdAndDelete.mockRejectedValue('Test error');
+                await deleteUser(req, res, next);
                 expect(next).toHaveBeenCalled();
             });
         });

@@ -32,3 +32,15 @@ export const errUpdateRenter = {
     status: '400',
     name: 'Bad Request ',
 };
+
+export const errCreateApartment = {
+    message: 'It is necessary to add address, province and cp of the apartment',
+    status: '400',
+    name: 'Bad Request ',
+};
+
+export const errUpdateApartment = {
+    message: 'Body empty',
+    status: '400',
+    name: 'Bad Request ',
+};
