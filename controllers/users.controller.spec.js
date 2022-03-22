@@ -4,9 +4,10 @@ import {
     login,
     updateUser,
     deleteUser,
+    loginWithToken,
 } from '../controllers/users.controllers.js';
 import { User } from '../models/user.models.js';
-import { createToken } from '../services/auth';
+import { createToken, verifyToken } from '../services/auth';
 import bcrypt from 'bcryptjs';
 
 jest.mock('../models/user.models.js');
@@ -22,6 +23,7 @@ describe("Given USERS controllers' ", () => {
         res = {};
         res.json = jest.fn().mockReturnValue(res);
         res.status = jest.fn().mockReturnValue(res);
+        req.get = jest.fn();
         next = jest.fn();
     });
     describe('Testing  getAllUsers ', () => {
@@ -196,6 +198,28 @@ describe("Given USERS controllers' ", () => {
             test('Then call next', async () => {
                 User.findByIdAndDelete.mockRejectedValue('Test error');
                 await deleteUser(req, res, next);
+                expect(next).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('Testing loginWithToken()', () => {
+        describe('when i call with an valid token bearer', () => {
+            test('Then  Next is call', async () => {
+                User.findOne.mockResolvedValue({});
+                req.get.mockReturnValue('bearer token');
+                console.log(req);
+                verifyToken.mockReturnValue({ id: '1' });
+                await loginWithToken(req, res, next);
+                expect(res.json).toHaveBeenCalled();
+            });
+        });
+        describe('when i call with an empty token bearer', () => {
+            test('Then res.json is call', async () => {
+                User.findOne.mockResolvedValue({});
+                req.get.mockReturnValue('');
+                verifyToken.mockReturnValue({ id: '1' });
+                await loginWithToken(req, res, next);
                 expect(next).toHaveBeenCalled();
             });
         });

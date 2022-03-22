@@ -72,6 +72,7 @@ export const updateIncident = async (req, res, next) => {
 };
 
 export const newIncident = async (req, res, next) => {
+    console.log(req.body);
     try {
         const result = await Incident.create(req.body);
         const { id, id_apartment } = result;

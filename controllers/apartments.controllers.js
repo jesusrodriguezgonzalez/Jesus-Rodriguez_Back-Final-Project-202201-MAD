@@ -53,6 +53,7 @@ export const updateApartment = async (req, res, next) => {
 };
 
 export const newApartment = async (req, res, next) => {
+    console.log(req.body);
     try {
         const result = await Apartment.create(req.body);
         res.status(201);

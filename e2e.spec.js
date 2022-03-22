@@ -74,6 +74,20 @@ describe('Given app', () => {
                 expect(response.status).toBe(500);
             });
         });
+        describe('When POST /users-token ', () => {
+            test('It returns status 200', async () => {
+                const response = await request(app)
+                    .post('/users/login-token')
+                    .set('Authorization', 'bearer ' + tokenUser);
+                expect(response.status).toBe(200);
+            });
+        });
+        describe('When POST /users-token without token bearer ', () => {
+            test('It returns status 200', async () => {
+                const response = await request(app).post('/users/login-token');
+                expect(response.status).toBe(401);
+            });
+        });
     });
 
     describe('TESTING APARTMENTS NODE', () => {

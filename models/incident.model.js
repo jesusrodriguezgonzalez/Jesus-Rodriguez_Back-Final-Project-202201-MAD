@@ -5,9 +5,10 @@ const userSchema = new mongoose.Schema({
     type_incidence: {
         type: String,
         required: true,
-        enum: ['Administrative', 'Break', 'Paid'],
+        enum: ['Administrative', 'Break', 'Paid', 'Others'],
     },
     id_apartment: {
+        required: true,
         type: [
             {
                 type: mongoose.Types.ObjectId,
@@ -23,7 +24,7 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
-    status: {
+    state: {
         type: String,
         enum: ['Open', 'Closed'],
         default: 'Open',
@@ -35,8 +36,9 @@ const userSchema = new mongoose.Schema({
         default: 'Medium',
         required: true,
     },
-    date_created: { type: Date },
+    date_created: { type: Date, default: new Date() },
     date_closed: { type: Date },
+    description: { type: String },
 });
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {

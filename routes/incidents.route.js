@@ -6,7 +6,7 @@ import { checkCreatorIncidents } from '../middleware/checkCreatorIncidents.js';
 import { loginRequired } from '../middleware/login-control.js';
 router.get('/', loginRequired, controller.getAllIncidents);
 router.get('/', loginRequired, controller.getIncidents);
-router.post('/', loginRequired, controller.newIncident);
+router.post('/', controller.newIncident);
 router.delete(
     '/:id',
     loginRequired,
