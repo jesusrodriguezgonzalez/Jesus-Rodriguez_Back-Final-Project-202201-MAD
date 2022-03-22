@@ -27,7 +27,12 @@ const userSchema = new mongoose.Schema({
         ],
     },
     apartments_owner: {
-        type: [],
+        type: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: 'Apartment',
+            },
+        ],
     },
     rol: { type: String, enum: ['Owner', 'Tenant'], default: 'Owner' },
     image: { type: String },

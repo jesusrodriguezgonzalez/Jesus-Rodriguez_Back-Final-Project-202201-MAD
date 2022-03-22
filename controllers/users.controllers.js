@@ -49,10 +49,16 @@ export const login = async (req, resp, next) => {
                 token,
                 email: userFound.email,
                 id: userFound.id,
-                image: userFound.image,
                 name: userFound.name,
                 surname: userFound.surname,
+                age: userFound.age,
                 phone: userFound.phone,
+                city: userFound.city,
+                direction: userFound.direction,
+                current_apartment: userFound.current_apartment,
+                apartments_owner: userFound.apartments_owner,
+                image: userFound.image,
+                rol: userFound.rol,
             });
         }
     }
@@ -89,10 +95,10 @@ export const loginWithToken = async (req, res, next) => {
         let decodedToken;
         if (authorization.toLowerCase().startsWith('bearer')) {
             token = authorization.substring(7);
+            console.log(token);
             decodedToken = verifyToken(token);
-            const userFound = await User.findOne({
-                id: decodedToken.id,
-            });
+            const userFound = await User.findById(decodedToken.id);
+            console.log(userFound);
             res.json(userFound);
         }
     }

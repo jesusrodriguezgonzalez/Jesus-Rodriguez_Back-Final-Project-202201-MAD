@@ -12,7 +12,16 @@ export function createToken(user) {
     const tokenPayload = {
         email: user.email,
         id: user.id,
-        pepe: 'pepe',
+        name: user.name,
+        surname: user.surname,
+        age: user.age,
+        phone: user.phone,
+        city: user.city,
+        direction: user.direction,
+        current_apartment: user.current_apartment,
+        apartments_owner: user.apartments_owner,
+        image: user.image,
+        rol: user.rol,
     };
     const secret = process.env.SECRET;
     return jwt.sign(tokenPayload, secret);
