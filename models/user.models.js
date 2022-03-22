@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
+    apartments_owner: {
+        type: [],
+    },
     rol: { type: String, enum: ['Owner', 'Tenant'], default: 'Owner' },
     image: { type: String },
 });

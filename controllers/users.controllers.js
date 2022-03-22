@@ -2,7 +2,7 @@ import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
 import { errUpdateUser, createUserError, loginError } from '../utils/errors.js';
 import { mongoConnect } from '../services/connection.js';
-import { createToken } from '../services/auth.js';
+import { createToken, verifyToken } from '../services/auth.js';
 import bcrypt from 'bcryptjs';
 export const getAllUsers = async (req, res, next) => {
     await mongoConnect();
@@ -22,7 +22,7 @@ export const registerUser = async (req, resp, next) => {
         resp.status(201);
         resp.json(result);
     } catch (error) {
-        next(createUserError);
+        next(createError(error, 400));
     }
 };
 
@@ -50,6 +50,9 @@ export const login = async (req, resp, next) => {
                 email: userFound.email,
                 id: userFound.id,
                 image: userFound.image,
+                name: userFound.name,
+                surname: userFound.surname,
+                phone: userFound.phone,
             });
         }
     }
@@ -73,5 +76,24 @@ export const deleteUser = async (req, res, next) => {
         res.json({ 'Deleted User': req.params.id });
     } catch (err) {
         next(createError(err));
+    }
+};
+
+export const loginWithToken = async (req, res, next) => {
+    const authorization = req.get('authorization');
+
+    if (!authorization) {
+        next(loginError);
+    } else {
+        let token;
+        let decodedToken;
+        if (authorization.toLowerCase().startsWith('bearer')) {
+            token = authorization.substring(7);
+            decodedToken = verifyToken(token);
+            const userFound = await User.findOne({
+                id: decodedToken.id,
+            });
+            res.json(userFound);
+        }
     }
 };

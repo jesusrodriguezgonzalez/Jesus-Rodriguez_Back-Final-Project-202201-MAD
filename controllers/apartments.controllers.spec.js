@@ -10,7 +10,10 @@ import {
     newApartment,
     addTenat,
 } from './apartments.controllers.js';
+import { mongoConnect } from '../services/connection.js';
+import { userMockOK } from '../utils/mock.js';
 
+jest.mock('../services/connection.js');
 jest.mock('../models/apartment.models.js');
 jest.mock('../models/user.models.js');
 describe(' Given APARTMENTS controllers', () => {
@@ -30,27 +33,26 @@ describe(' Given APARTMENTS controllers', () => {
     });
 
     const mockApartment = {
+        id: '1234567',
         direction: 'New Direction',
         cp: '28010',
         province: 'Madrid',
+        owner: '12345',
     };
 
     describe('Testing  getAllapartments() ', () => {
         test('should return correct mockResolvedValue', async () => {
+            req.tokenPayload = { id: '1234' };
             Apartment.find.mockResolvedValue([mockApartment]);
             await getAllApartments(req, res);
 
             expect(res.json).toHaveBeenCalledTimes(1);
-            expect(res.json).toHaveBeenCalledWith([
-                {
-                    direction: 'New Direction',
-                    cp: '28010',
-                    province: 'Madrid',
-                },
-            ]);
+            expect(res.json).toHaveBeenCalledWith([mockApartment]);
         });
         describe('And it not works (promise is rejected)', () => {
             test('Then call next', async () => {
+                req.tokenPayload = { id: '1234' };
+
                 Apartment.find.mockRejectedValue('Test error');
                 await getAllApartments(req, res, next);
                 expect(next).toHaveBeenCalled();
@@ -67,6 +69,7 @@ describe(' Given APARTMENTS controllers', () => {
                             direction: 'New Direction',
                             cp: '28010',
                             province: 'Madrid',
+                            owner: '12345',
                         },
                     ],
                 }),
@@ -138,23 +141,30 @@ describe(' Given APARTMENTS controllers', () => {
         });
     });
 
-    describe('Testing  newIncident ', () => {
+    describe('Testing  newaApartments ', () => {
         test('should return correct mockResolvedValue', async () => {
-            Apartment.create.mockResolvedValue([mockApartment]);
+            req.body = mockApartment;
+            Apartment.create.mockResolvedValue(mockApartment);
+            User.findById.mockResolvedValue({
+                ...userMockOK,
+                save: jest.fn(),
+            });
 
-            await newApartment(req, res);
+            await newApartment(req, res, next);
 
             expect(res.json).toHaveBeenCalledTimes(1);
-            expect(res.json).toHaveBeenCalledWith([
-                {
-                    direction: 'New Direction',
-                    cp: '28010',
-                    province: 'Madrid',
-                },
-            ]);
+            expect(res.json).toHaveBeenCalledWith({
+                direction: 'New Direction',
+                cp: '28010',
+                province: 'Madrid',
+                owner: '12345',
+                id: '1234567',
+            });
         });
         describe('And it not works (promise is rejected)', () => {
             test('Then call next', async () => {
+                req.body = mockApartment;
+
                 Apartment.create.mockRejectedValue('Test error');
                 await newApartment(req, res, next);
                 expect(next).toHaveBeenCalled();

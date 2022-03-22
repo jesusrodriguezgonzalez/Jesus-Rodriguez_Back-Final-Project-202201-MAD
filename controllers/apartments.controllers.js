@@ -5,9 +5,11 @@ import { User } from '../models/user.models.js';
 import { errUpdateRenter } from '../utils/errors.js';
 
 export const getAllApartments = async (req, res, next) => {
+    const { id } = req.tokenPayload;
+
     await mongoConnect();
     try {
-        const resp = await Apartment.find({});
+        const resp = await Apartment.find({ owner: id });
         res.status(200).json(resp);
     } catch (err) {
         next(createError(err));
@@ -53,8 +55,14 @@ export const updateApartment = async (req, res, next) => {
 };
 
 export const newApartment = async (req, res, next) => {
+    const { owner } = req.body;
     try {
         const result = await Apartment.create(req.body);
+        const { id } = result;
+        const userOwner = await User.findById(owner);
+        userOwner.apartments_owner.push(id);
+        console.log(userOwner);
+        await userOwner.save();
         res.status(201);
         res.json(result);
     } catch (error) {
