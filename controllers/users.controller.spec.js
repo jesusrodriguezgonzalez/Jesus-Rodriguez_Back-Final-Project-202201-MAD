@@ -208,7 +208,6 @@ describe("Given USERS controllers' ", () => {
             test('Then  Next is call', async () => {
                 User.findOne.mockResolvedValue({});
                 req.get.mockReturnValue('bearer token');
-                console.log(req);
                 verifyToken.mockReturnValue({ id: '1' });
                 await loginWithToken(req, res, next);
                 expect(res.json).toHaveBeenCalled();

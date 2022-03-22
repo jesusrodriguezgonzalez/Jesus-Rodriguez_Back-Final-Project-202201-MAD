@@ -15,7 +15,6 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 export const registerUser = async (req, resp, next) => {
-    console.log(req.body);
     try {
         const encryptedPasswd = bcrypt.hashSync(req.body.passwd);
         const userData = { ...req.body, passwd: encryptedPasswd };
@@ -28,7 +27,6 @@ export const registerUser = async (req, resp, next) => {
 };
 
 export const login = async (req, resp, next) => {
-    console.log(req.body);
     const user = req.body;
     if (!user.email || !user.passwd) {
         next(loginError);
@@ -47,12 +45,14 @@ export const login = async (req, resp, next) => {
                 email: userFound.email,
                 id: userFound.id,
             });
-            console.log(token);
             resp.json({
                 token,
                 email: userFound.email,
                 id: userFound.id,
                 image: userFound.image,
+                name: userFound.name,
+                surname: userFound.surname,
+                phone: userFound.phone,
             });
         }
     }

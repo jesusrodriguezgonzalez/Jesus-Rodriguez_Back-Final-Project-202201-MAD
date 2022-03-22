@@ -8,7 +8,7 @@ import { loginRequired } from '../middleware/login-control.js';
 router.get('/', loginRequired, controller.getAllApartments);
 router.get('/:id', loginRequired, controller.getApartment);
 router.patch('/:id', loginRequired, isOwner, controller.updateApartment);
-router.post('/', controller.newApartment);
+router.post('/', loginRequired, controller.newApartment);
 router.delete('/:id', loginRequired, isOwner, controller.deleteApartment);
 router.patch('/add-tenant/:id', loginRequired, isOwner, controller.addTenat);
 
