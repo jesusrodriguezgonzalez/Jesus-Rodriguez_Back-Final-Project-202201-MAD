@@ -97,8 +97,27 @@ export const loginWithToken = async (req, res, next) => {
             token = authorization.substring(7);
             decodedToken = verifyToken(token);
             const userFound = await User.findById(decodedToken.id)
-                .populate('current_apartment', { history_tenant: 0 })
-                .populate('apartments_owner');
+                .populate({
+                    path: 'apartments_owner',
+                    populate: {
+                        select: 'name surname',
+                        path: 'current_tenant',
+                    },
+                })
+                .populate({
+                    path: 'apartments_owner',
+                    populate: {
+                        select: 'name surname age',
+                        path: 'owner',
+                    },
+                })
+                .populate({
+                    path: 'current_apartment',
+                    populate: {
+                        select: 'name surname age',
+                        path: 'owner',
+                    },
+                });
             res.json(userFound);
         }
     }

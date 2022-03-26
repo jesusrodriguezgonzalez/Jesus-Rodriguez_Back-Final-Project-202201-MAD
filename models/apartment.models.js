@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
     },
+    // owner: { type: String },
     owner: {
         type: [
             {
@@ -49,7 +50,6 @@ const userSchema = new mongoose.Schema({
                 ref: 'User',
             },
         ],
-        default: {},
     },
 });
 userSchema.set('toJSON', {
