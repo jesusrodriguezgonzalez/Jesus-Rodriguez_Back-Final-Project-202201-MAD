@@ -12,11 +12,7 @@ export const isOwner = async (req, res, next) => {
     if (authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.substring(7);
         decodedToken = verifyToken(token);
-        console.log(decodedToken, 'token');
         const apartment = await Apartment.findById(id);
-        console.log(apartment.owner.toString(), 'apartamento');
-        console.log(apartment.owner.toString() === decodedToken);
-
         if (apartment.owner.toString() === decodedToken.id) {
             next();
         } else {

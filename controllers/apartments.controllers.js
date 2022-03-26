@@ -31,6 +31,12 @@ export const getApartment = async (req, res, next) => {
                 name: 1,
                 surname: 1,
             })
+            .populate('owner', {
+                id: 1,
+                email: 1,
+                name: 1,
+                surname: 1,
+            })
             .populate('incidents', {});
         res.status(200);
         res.json(resp);
@@ -40,7 +46,6 @@ export const getApartment = async (req, res, next) => {
 };
 
 export const deleteApartment = async (req, res, next) => {
-    console.log(req.body);
     try {
         await Apartment.findByIdAndDelete(req.params.id);
         res.status(202);
