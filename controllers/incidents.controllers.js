@@ -4,23 +4,20 @@ import { createError } from '../services/create-error.js';
 import { Apartment } from '../models/apartment.models.js';
 
 export const getAllIncidents = async (req, res, next) => {
+    console.log(req.params.id);
+    const idApartment = req.params.id;
     await mongoConnect();
     try {
-        const resp = await Incident.find({})
-            .populate('id_apartment', {
-                current_rented: 0,
-                history_rented: 0,
-                status: 0,
-                photos: 0,
-                incidents: 0,
-            })
-            .populate('id_user', {
-                age: 0,
-                city: 0,
-                direction: 0,
-                apartment_history: 0,
-                rol: 0,
-            });
+        const resp = await Incident.find({
+            id_apartment: idApartment,
+        }).populate('id_apartment', {
+            current_tenant: 0,
+            history_tenant: 0,
+            status: 0,
+            photos: 0,
+            incidents: 0,
+        });
+
         res.json(resp);
     } catch (err) {
         next(createError(err));

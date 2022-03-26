@@ -5,6 +5,7 @@ import { tokenError, unAuthorized } from '../utils/errors.js';
 export const isOwner = async (req, res, next) => {
     const { id } = req.params;
     const authorization = req.get('authorization');
+    console.log(authorization);
     let token;
 
     let decodedToken;
@@ -12,8 +13,7 @@ export const isOwner = async (req, res, next) => {
         token = authorization.substring(7);
         decodedToken = verifyToken(token);
         const apartment = await Apartment.findById(id);
-
-        if (apartment.owner === decodedToken.id) {
+        if (apartment.owner.toString() === decodedToken.id) {
             next();
         } else {
             next(unAuthorized);

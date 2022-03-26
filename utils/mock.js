@@ -17,7 +17,7 @@ export const userMockOK = {
     current_tenant: '123456',
     rol: 'Owner',
     image: 'https://enciclopedia.banrepcultural.org/images/5/55/Avatar-hombre.jpg',
-    apartments_owner: ['12345'],
+    apartmens_owner: '12345',
 };
 export const apartmentsOK = {
     direction: 'C/Vallehermoso,110',

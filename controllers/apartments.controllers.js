@@ -19,8 +19,25 @@ export const getAllApartments = async (req, res, next) => {
 export const getApartment = async (req, res, next) => {
     try {
         const resp = await Apartment.findById(req.params.id)
-            .populate('current_user', { id: 1, email: 1, name: 1, surname: 1 })
-            .populate('history_user', { id: 1, email: 1, name: 1, surname: 1 });
+            .populate('current_tenant', {
+                id: 1,
+                email: 1,
+                name: 1,
+                surname: 1,
+            })
+            .populate('current_tenant', {
+                id: 1,
+                email: 1,
+                name: 1,
+                surname: 1,
+            })
+            .populate('owner', {
+                id: 1,
+                email: 1,
+                name: 1,
+                surname: 1,
+            })
+            .populate('incidents', {});
         res.status(200);
         res.json(resp);
     } catch (err) {
@@ -55,13 +72,13 @@ export const updateApartment = async (req, res, next) => {
 };
 
 export const newApartment = async (req, res, next) => {
+    console.log(req.body);
     const { owner } = req.body;
     try {
         const result = await Apartment.create(req.body);
         const { id } = result;
         const userOwner = await User.findById(owner);
         userOwner.apartments_owner.push(id);
-        console.log(userOwner);
         await userOwner.save();
         res.status(201);
         res.json(result);
@@ -78,7 +95,7 @@ export const addTenat = async (req, res, next) => {
             const userTenant = await User.findOne({ email: emailTenant });
             const resp = await Apartment.findByIdAndUpdate(
                 idApartment,
-                { current_rented: userTenant.id },
+                { current_tenant: userTenant.id },
                 {
                     new: true,
                 }

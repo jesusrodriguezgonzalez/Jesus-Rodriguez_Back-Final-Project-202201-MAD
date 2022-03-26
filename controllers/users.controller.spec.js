@@ -215,9 +215,9 @@ describe("Given USERS controllers' ", () => {
         });
         describe('when i call with an empty token bearer', () => {
             test('Then res.json is call', async () => {
-                User.findOne.mockResolvedValue({});
+                User.findById.mockResolvedValue({});
                 req.get.mockReturnValue('');
-                verifyToken.mockReturnValue({ id: '1' });
+                verifyToken.mockReturnValue('1');
                 await loginWithToken(req, res, next);
                 expect(next).toHaveBeenCalled();
             });

@@ -1,6 +1,6 @@
 import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
-import { errUpdateUser, createUserError, loginError } from '../utils/errors.js';
+import { errUpdateUser, loginError } from '../utils/errors.js';
 import { mongoConnect } from '../services/connection.js';
 import { createToken, verifyToken } from '../services/auth.js';
 import bcrypt from 'bcryptjs';
@@ -49,16 +49,23 @@ export const login = async (req, resp, next) => {
                 token,
                 email: userFound.email,
                 id: userFound.id,
-                image: userFound.image,
                 name: userFound.name,
                 surname: userFound.surname,
+                age: userFound.age,
                 phone: userFound.phone,
+                city: userFound.city,
+                direction: userFound.direction,
+                current_apartment: userFound.current_apartment,
+                apartments_owner: userFound.apartments_owner,
+                image: userFound.image,
+                rol: userFound.rol,
             });
         }
     }
 };
 
 export const updateUser = async (req, res, next) => {
+    console.log(req.body);
     try {
         const resp = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
@@ -81,7 +88,6 @@ export const deleteUser = async (req, res, next) => {
 
 export const loginWithToken = async (req, res, next) => {
     const authorization = req.get('authorization');
-
     if (!authorization) {
         next(loginError);
     } else {
@@ -90,9 +96,28 @@ export const loginWithToken = async (req, res, next) => {
         if (authorization.toLowerCase().startsWith('bearer')) {
             token = authorization.substring(7);
             decodedToken = verifyToken(token);
-            const userFound = await User.findOne({
-                id: decodedToken.id,
-            });
+            const userFound = await User.findById(decodedToken.id)
+                .populate({
+                    path: 'apartments_owner',
+                    populate: {
+                        select: 'name surname',
+                        path: 'current_tenant',
+                    },
+                })
+                .populate({
+                    path: 'apartments_owner',
+                    populate: {
+                        select: 'name surname age',
+                        path: 'owner',
+                    },
+                })
+                .populate({
+                    path: 'current_apartment',
+                    populate: {
+                        select: 'name surname age',
+                        path: 'owner',
+                    },
+                });
             res.json(userFound);
         }
     }
