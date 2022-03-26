@@ -10,7 +10,6 @@ import {
     newApartment,
     addTenat,
 } from './apartments.controllers.js';
-import { mongoConnect } from '../services/connection.js';
 import { userMockOK } from '../utils/mock.js';
 
 jest.mock('../services/connection.js');
@@ -146,19 +145,18 @@ describe(' Given APARTMENTS controllers', () => {
             req.body = mockApartment;
             Apartment.create.mockResolvedValue(mockApartment);
             User.findById.mockResolvedValue({
-                ...userMockOK,
+                owner: '12345',
                 save: jest.fn(),
             });
 
             await newApartment(req, res, next);
-
-            expect(res.json).toHaveBeenCalledTimes(1);
+            expect(res.json).toHaveBeenCalled();
             expect(res.json).toHaveBeenCalledWith({
+                id: '1234567',
                 direction: 'New Direction',
                 cp: '28010',
                 province: 'Madrid',
                 owner: '12345',
-                id: '1234567',
             });
         });
         describe('And it not works (promise is rejected)', () => {

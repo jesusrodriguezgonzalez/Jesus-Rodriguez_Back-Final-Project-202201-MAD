@@ -1,6 +1,6 @@
 import { User } from '../models/user.models.js';
 import { createError } from '../services/create-error.js';
-import { errUpdateUser, createUserError, loginError } from '../utils/errors.js';
+import { errUpdateUser, loginError } from '../utils/errors.js';
 import { mongoConnect } from '../services/connection.js';
 import { createToken, verifyToken } from '../services/auth.js';
 import bcrypt from 'bcryptjs';
@@ -65,6 +65,7 @@ export const login = async (req, resp, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
+    console.log(req.body);
     try {
         const resp = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
@@ -87,7 +88,6 @@ export const deleteUser = async (req, res, next) => {
 
 export const loginWithToken = async (req, res, next) => {
     const authorization = req.get('authorization');
-
     if (!authorization) {
         next(loginError);
     } else {
@@ -95,10 +95,10 @@ export const loginWithToken = async (req, res, next) => {
         let decodedToken;
         if (authorization.toLowerCase().startsWith('bearer')) {
             token = authorization.substring(7);
-            console.log(token);
             decodedToken = verifyToken(token);
-            const userFound = await User.findById(decodedToken.id);
-            console.log(userFound);
+            const userFound = await User.findById(decodedToken.id)
+                .populate('current_apartment', { history_tenant: 0 })
+                .populate('apartments_owner');
             res.json(userFound);
         }
     }
