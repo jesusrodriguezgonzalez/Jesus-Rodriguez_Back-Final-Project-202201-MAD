@@ -3,9 +3,7 @@ import { Incident } from '../models/incident.model.js';
 import { tokenError, unAuthorized } from '../utils/errors.js';
 export const checkCreatorIncidents = async (req, res, next) => {
     const { id } = req.params;
-    console.log(id);
     const authorization = req.get('authorization');
-    console.log(authorization);
     let token;
     let decodedToken;
     if (authorization.toLowerCase().startsWith('bearer')) {

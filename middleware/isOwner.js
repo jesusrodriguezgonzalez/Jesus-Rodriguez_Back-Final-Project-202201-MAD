@@ -5,7 +5,6 @@ import { tokenError, unAuthorized } from '../utils/errors.js';
 export const isOwner = async (req, res, next) => {
     const { id } = req.params;
     const authorization = req.get('authorization');
-    console.log(authorization);
     let token;
 
     let decodedToken;

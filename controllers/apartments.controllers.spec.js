@@ -145,11 +145,12 @@ describe(' Given APARTMENTS controllers', () => {
             req.body = mockApartment;
             Apartment.create.mockResolvedValue(mockApartment);
             User.findById.mockResolvedValue({
-                owner: '12345',
+                owner: '62304dc95762224f4b796d98',
                 save: jest.fn(),
             });
 
             await newApartment(req, res, next);
+            console.log(res.json, 'JSON');
             expect(res.json).toHaveBeenCalled();
             expect(res.json).toHaveBeenCalledWith({
                 id: '1234567',
