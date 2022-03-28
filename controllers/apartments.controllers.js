@@ -76,6 +76,7 @@ export const newApartment = async (req, res, next) => {
     const { owner } = req.body;
     try {
         const result = await Apartment.create(req.body);
+        console.log(result, 'result');
         const { id } = result;
         const userOwner = await User.findById(owner);
         userOwner.apartments_owner.push(id);
@@ -95,7 +96,7 @@ export const addTenat = async (req, res, next) => {
             const userTenant = await User.findOne({ email: emailTenant });
             const resp = await Apartment.findByIdAndUpdate(
                 idApartment,
-                { current_tenant: userTenant.id },
+                { current_tenant: userTenant.id, status: 'Alquilada' },
                 {
                     new: true,
                 }

@@ -33,7 +33,28 @@ export const login = async (req, resp, next) => {
     } else {
         const userFound = await User.findOne({
             email: user.email,
-        });
+        })
+            .populate({
+                path: 'apartments_owner',
+                populate: {
+                    select: 'name surname rol',
+                    path: 'current_tenant',
+                },
+            })
+            .populate({
+                path: 'apartments_owner',
+                populate: {
+                    select: 'name surname rol',
+                    path: 'owner',
+                },
+            })
+            .populate({
+                path: 'current_apartment',
+                populate: {
+                    select: 'name surname rol',
+                    path: 'owner',
+                },
+            });
         if (!userFound) {
             next(loginError);
         } else if (
@@ -100,21 +121,21 @@ export const loginWithToken = async (req, res, next) => {
                 .populate({
                     path: 'apartments_owner',
                     populate: {
-                        select: 'name surname',
+                        select: 'name surname rol',
                         path: 'current_tenant',
                     },
                 })
                 .populate({
                     path: 'apartments_owner',
                     populate: {
-                        select: 'name surname age',
+                        select: 'name surname rol',
                         path: 'owner',
                     },
                 })
                 .populate({
                     path: 'current_apartment',
                     populate: {
-                        select: 'name surname age',
+                        select: 'name surname rol',
                         path: 'owner',
                     },
                 });
