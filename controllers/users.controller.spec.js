@@ -115,7 +115,13 @@ describe("Given USERS controllers' ", () => {
 
                 describe('And the user name is not found', () => {
                     test('Then call next', async () => {
-                        User.findOne.mockResolvedValue(null);
+                        User.findOne.mockReturnValue({
+                            populate: jest.fn().mockReturnValue({
+                                populate: jest.fn().mockReturnValue({
+                                    populate: jest.fn().mockReturnValue(null),
+                                }),
+                            }),
+                        });
                         await login(req, res, next);
                         expect(next).toHaveBeenCalled();
                     });
@@ -123,7 +129,18 @@ describe("Given USERS controllers' ", () => {
 
                 describe('And the password is no correct', () => {
                     test('Then call next', async () => {
-                        User.findOne.mockResolvedValue({});
+                        User.findOne.mockReturnValue({
+                            populate: jest.fn().mockReturnValue({
+                                populate: jest.fn().mockReturnValue({
+                                    populate: jest.fn().mockReturnValue({
+                                        token: 'mock_token',
+                                        email: 'Jesus@gmail.com',
+                                        id: '123',
+                                        image: 'imageString',
+                                    }),
+                                }),
+                            }),
+                        });
                         bcrypt.compareSync.mockReturnValue(false);
                         await login(req, res, next);
                         expect(next).toHaveBeenCalled();
@@ -139,7 +156,15 @@ describe("Given USERS controllers' ", () => {
                             image: 'imageString',
                         };
                         req.body = userMock;
-                        User.findOne.mockResolvedValue(userMock);
+                        User.findOne.mockReturnValue({
+                            populate: jest.fn().mockReturnValue({
+                                populate: jest.fn().mockReturnValue({
+                                    populate: jest
+                                        .fn()
+                                        .mockReturnValue(userMock),
+                                }),
+                            }),
+                        });
                         bcrypt.compareSync.mockReturnValue(true);
                         createToken.mockReturnValue('mock_token');
                         await login(req, res, next);
@@ -206,7 +231,19 @@ describe("Given USERS controllers' ", () => {
     describe('Testing loginWithToken()', () => {
         describe('when i call with an valid token bearer', () => {
             test('Then  Next is call', async () => {
-                User.findOne.mockResolvedValue({});
+                User.findById.mockReturnValue({
+                    populate: jest.fn().mockReturnValue({
+                        populate: jest.fn().mockReturnValue({
+                            populate: jest.fn().mockReturnValue({
+                                token: 'mock_token',
+                                email: 'Jesus@gmail.com',
+                                id: '123',
+                                image: 'imageString',
+                            }),
+                        }),
+                    }),
+                });
+
                 req.get.mockReturnValue('bearer token');
                 verifyToken.mockReturnValue({ id: '1' });
                 await loginWithToken(req, res, next);
@@ -215,7 +252,20 @@ describe("Given USERS controllers' ", () => {
         });
         describe('when i call with an empty token bearer', () => {
             test('Then res.json is call', async () => {
-                User.findById.mockResolvedValue({});
+                User.findById.mockResolvedValue({
+                    populate: () => ({
+                        populate: () => ({
+                            populate: () => [
+                                {
+                                    token: 'mock_token',
+                                    email: 'Jesus@gmail.com',
+                                    id: '123',
+                                    image: 'imageString',
+                                },
+                            ],
+                        }),
+                    }),
+                });
                 req.get.mockReturnValue('');
                 verifyToken.mockReturnValue('1');
                 await loginWithToken(req, res, next);

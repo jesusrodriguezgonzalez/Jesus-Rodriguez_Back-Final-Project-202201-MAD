@@ -63,14 +63,16 @@ describe(' Given APARTMENTS controllers', () => {
         beforeEach(() => {
             Apartment.findById.mockReturnValue({
                 populate: () => ({
-                    populate: () => [
-                        {
-                            direction: 'New Direction',
-                            cp: '28010',
-                            province: 'Madrid',
-                            owner: '12345',
-                        },
-                    ],
+                    populate: () => ({
+                        populate: () => [
+                            {
+                                direction: 'New Direction',
+                                cp: '28010',
+                                province: 'Madrid',
+                                owner: '12345',
+                            },
+                        ],
+                    }),
                 }),
             });
         });
@@ -146,11 +148,12 @@ describe(' Given APARTMENTS controllers', () => {
             Apartment.create.mockResolvedValue(mockApartment);
             User.findById.mockResolvedValue({
                 owner: '62304dc95762224f4b796d98',
+                apartments_owner: [],
                 save: jest.fn(),
             });
 
             await newApartment(req, res, next);
-            console.log(res.json, 'JSON');
+
             expect(res.json).toHaveBeenCalled();
             expect(res.json).toHaveBeenCalledWith({
                 id: '1234567',
