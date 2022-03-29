@@ -24,18 +24,16 @@ export const getApartment = async (req, res, next) => {
                 email: 1,
                 name: 1,
                 surname: 1,
-            })
-            .populate('current_tenant', {
-                id: 1,
-                email: 1,
-                name: 1,
-                surname: 1,
+                image: 1,
+                phone: 1,
             })
             .populate('owner', {
                 id: 1,
                 email: 1,
                 name: 1,
                 surname: 1,
+                image: 1,
+                phone: 1,
             })
             .populate('incidents', {});
         res.status(200);
@@ -72,11 +70,10 @@ export const updateApartment = async (req, res, next) => {
 };
 
 export const newApartment = async (req, res, next) => {
-    console.log(req.body);
     const { owner } = req.body;
     try {
         const result = await Apartment.create(req.body);
-        console.log(result, 'result');
+
         const { id } = result;
         const userOwner = await User.findById(owner);
         userOwner.apartments_owner.push(id);

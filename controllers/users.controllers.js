@@ -37,7 +37,7 @@ export const login = async (req, resp, next) => {
             .populate({
                 path: 'apartments_owner',
                 populate: {
-                    select: 'name surname rol',
+                    select: 'name surname rol image',
                     path: 'current_tenant',
                 },
             })
@@ -86,7 +86,6 @@ export const login = async (req, resp, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
-    console.log(req.body);
     try {
         const resp = await User.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
@@ -121,21 +120,21 @@ export const loginWithToken = async (req, res, next) => {
                 .populate({
                     path: 'apartments_owner',
                     populate: {
-                        select: 'name surname rol',
+                        select: 'name surname rol image phone',
                         path: 'current_tenant',
                     },
                 })
                 .populate({
                     path: 'apartments_owner',
                     populate: {
-                        select: 'name surname rol',
+                        select: 'name surname rol phone',
                         path: 'owner',
                     },
                 })
                 .populate({
                     path: 'current_apartment',
                     populate: {
-                        select: 'name surname rol',
+                        select: 'name surname rol phone',
                         path: 'owner',
                     },
                 });

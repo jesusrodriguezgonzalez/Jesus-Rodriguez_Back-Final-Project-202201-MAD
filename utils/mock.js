@@ -23,7 +23,7 @@ export const apartmentsOK = {
     direction: 'C/Vallehermoso,110',
     cp: '28010',
     province: 'Madrid',
-    status: 'Leased',
-    photos: [],
+    status: 'Disponible',
+    photos: 'url_photo',
     owner: '62304dc95762224f4b796d98',
 };

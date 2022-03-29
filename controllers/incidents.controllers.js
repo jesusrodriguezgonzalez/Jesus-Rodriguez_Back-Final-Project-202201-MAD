@@ -4,7 +4,6 @@ import { createError } from '../services/create-error.js';
 import { Apartment } from '../models/apartment.models.js';
 
 export const getAllIncidents = async (req, res, next) => {
-    console.log(req.params.id);
     const idApartment = req.params.id;
     await mongoConnect();
     try {

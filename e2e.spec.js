@@ -101,8 +101,8 @@ describe('Given app', () => {
                         cp: '28010',
                         province: 'Madrid',
                         current_user: '62304dc95762224f4b796d98',
-                        status: 'Leased',
-                        photos: [],
+                        status: 'Disponible',
+                        photos: 'url_photo',
                         incidents: [],
                         owner: id,
                     });

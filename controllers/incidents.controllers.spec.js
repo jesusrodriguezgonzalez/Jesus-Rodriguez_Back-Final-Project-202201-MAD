@@ -30,15 +30,13 @@ describe(' Given INCIDENTS controllers', () => {
     describe('Testing  getAllIncidents ', () => {
         test('should return correct mockResolvedValue', async () => {
             Incident.find.mockReturnValue({
-                populate: () => ({
-                    populate: () => [
-                        {
-                            title: 'New Incidents',
-                            status: 'Open',
-                            priority: 'High',
-                        },
-                    ],
-                }),
+                populate: () => [
+                    {
+                        title: 'New Incidents',
+                        status: 'Open',
+                        priority: 'High',
+                    },
+                ],
             });
 
             await getAllIncidents(req, res);
