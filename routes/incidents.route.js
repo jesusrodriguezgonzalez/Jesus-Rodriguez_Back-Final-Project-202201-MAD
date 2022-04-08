@@ -4,7 +4,10 @@ const router = express.Router();
 import * as controller from '../controllers/incidents.controllers.js';
 import { checkCreatorIncidents } from '../middleware/checkCreatorIncidents.js';
 import { loginRequired } from '../middleware/login-control.js';
-router.get('/:id', loginRequired, controller.getAllIncidents);
+
+router.get('/', loginRequired, controller.getAllIncidents);
+router.get('/:id', loginRequired, controller.getAllIncidentsByApartment);
+router.post('/:id/comment', loginRequired, controller.addComment);
 router.get('/', loginRequired, controller.getIncidents);
 router.post('/', loginRequired, controller.newIncident);
 router.delete(

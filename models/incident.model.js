@@ -39,6 +39,13 @@ const userSchema = new mongoose.Schema({
     date_created: { type: Date, default: new Date() },
     date_closed: { type: Date },
     description: { type: String },
+    comments: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Comment',
+            sparse: true,
+        },
+    ],
 });
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
