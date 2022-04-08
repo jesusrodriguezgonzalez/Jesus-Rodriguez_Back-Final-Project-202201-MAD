@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema({
             },
         ],
     },
+    current_contract: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Contract',
+    },
 });
 userSchema.set('toJSON', {
     transform: (document, returnedObject) => {
