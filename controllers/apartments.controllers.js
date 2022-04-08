@@ -3,6 +3,7 @@ import { createError } from '../services/create-error.js';
 import { Apartment } from '../models/apartment.models.js';
 import { User } from '../models/user.models.js';
 import { errUpdateRenter } from '../utils/errors.js';
+import { Contract } from '../models/contracts.js';
 
 export const getAllApartments = async (req, res, next) => {
     const { id } = req.tokenPayload;
@@ -35,6 +36,7 @@ export const getApartment = async (req, res, next) => {
                 image: 1,
                 phone: 1,
             })
+            .populate('current_contract')
             .populate('incidents', {});
         res.status(200);
         res.json(resp);
@@ -86,11 +88,11 @@ export const newApartment = async (req, res, next) => {
 };
 
 export const addTenat = async (req, res, next) => {
-    const emailTenant = req.body.email;
     const idApartment = req.params.id;
-    if (emailTenant) {
+    const { email, user_owner, start_date, end_date, document, fee } = req.body;
+    if (email) {
         try {
-            const userTenant = await User.findOne({ email: emailTenant });
+            const userTenant = await User.findOne({ email });
             const resp = await Apartment.findByIdAndUpdate(
                 idApartment,
                 { current_tenant: userTenant.id, status: 'Alquilada' },
@@ -100,7 +102,20 @@ export const addTenat = async (req, res, next) => {
             );
             userTenant.current_apartment = idApartment;
             await userTenant.save();
-            res.json(resp);
+            const contract = await Contract.create({
+                user_owner,
+                user_tenant: userTenant.id,
+                start_date,
+                end_date,
+                id_apartment: idApartment,
+                document,
+                fee,
+            });
+            userTenant.current_contract = contract.id;
+            await userTenant.save();
+            (resp.current_contract = contract.id), await resp.save();
+
+            res.json({ apartment: resp, contract: contract });
             res.status(200);
         } catch (err) {
             next(createError(err));

@@ -48,6 +48,7 @@ export const login = async (req, resp, next) => {
                     path: 'owner',
                 },
             })
+            .populate('current_contract')
             .populate({
                 path: 'current_apartment',
                 populate: {
@@ -55,6 +56,7 @@ export const login = async (req, resp, next) => {
                     path: 'owner',
                 },
             });
+
         if (!userFound) {
             next(loginError);
         } else if (
@@ -80,6 +82,7 @@ export const login = async (req, resp, next) => {
                 apartments_owner: userFound.apartments_owner,
                 image: userFound.image,
                 rol: userFound.rol,
+                current_contract: userFound.current_contract,
             });
         }
     }
@@ -132,10 +135,23 @@ export const loginWithToken = async (req, res, next) => {
                     },
                 })
                 .populate({
+                    path: 'apartments_owner',
+                    populate: {
+                        path: 'current_contract',
+                    },
+                })
+                .populate('current_contract')
+                .populate({
                     path: 'current_apartment',
                     populate: {
                         select: 'name surname rol phone',
                         path: 'owner',
+                    },
+                })
+                .populate({
+                    path: 'current_apartment',
+                    populate: {
+                        path: 'current_contract',
                     },
                 });
             res.json(userFound);
