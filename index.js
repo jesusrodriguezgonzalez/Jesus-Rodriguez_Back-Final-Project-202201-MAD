@@ -15,6 +15,7 @@ import incidentsROute from './routes/incidents.route.js';
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
+app.options('*', cors());
 
 mongoConnect();
 app.use('/users', usersRouter);
