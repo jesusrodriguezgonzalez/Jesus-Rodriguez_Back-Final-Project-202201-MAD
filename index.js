@@ -21,6 +21,10 @@ app.use('/users', usersRouter);
 app.use('/apartments', apartmentsRoute);
 app.use('/incidents', incidentsROute);
 
+usersRouter.all('*', cors());
+apartmentsRoute.all('*', cors());
+incidentsROute.all('*', cors());
+
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, resp, next) => {
     console.log(err.message);
